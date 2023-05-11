@@ -4,6 +4,9 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 
+__all__ = ["Shop"]
+
+
 class Shop(Base):
     name: Mapped[str] = mapped_column(String(), unique=True)
     address: Mapped[str]

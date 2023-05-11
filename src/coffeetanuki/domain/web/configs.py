@@ -9,12 +9,12 @@ from coffeetanuki import utils
 
 DEFAULT_MODULE_NAME = "coffeetanuki"
 BASE_DIR: Final = utils.module_to_os_path(DEFAULT_MODULE_NAME)
-TEMPLATES_DIR = Path(BASE_DIR / "web" / "templates")
-SCRIPTS_DIR = Path(BASE_DIR / "web" / "static" / "scripts")
-STYLES_DIR = Path(BASE_DIR / "web" / "static" / "styles")
+TEMPLATES_DIR = Path(BASE_DIR / "domain" / "web" / "templates")
+SCRIPTS_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "scripts")
+STYLES_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "styles")
 
 template_config = TemplateConfig(
-    directory=Path("./src/coffeetanuki/web/templates"),
+    directory=Path(TEMPLATES_DIR),
     engine=JinjaTemplateEngine,
 )
 

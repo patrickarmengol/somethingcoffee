@@ -1,13 +1,16 @@
-from uuid import UUID
 from typing import Any
+from uuid import UUID
+
 from litestar import Controller, get, post
 from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from litestar.di import Provide
 from litestar.params import Parameter
-from sqlalchemy.ext.asyncio import AsyncSession
-from coffeetanuki import models, schemas
 from pydantic import parse_obj_as
-from litestar.response_containers import Template
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from coffeetanuki.domain.shops import models, schemas
+
+__all__ = ["ShopController"]
 
 
 class ShopRepository(SQLAlchemyAsyncRepository[models.Shop]):
@@ -78,13 +81,3 @@ class ShopController(Controller):
         )
         await shop_repo.session.commit()
         return schemas.Shop.from_orm(obj)
-
-
-class WebController(Controller):
-    """Website rendering"""
-
-    path = ""
-
-    @get("/")
-    async def homepage(self) -> Template:
-        return Template(name="map.html.jinja2")

@@ -3,6 +3,9 @@ from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
 
 
+__all__ = ["Coordinates", "ShopBase", "ShopCreate", "Shop"]
+
+
 class Coordinates(BaseModel):
     # TODO: validate
     lon: float
