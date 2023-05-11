@@ -26,7 +26,7 @@ async def provide_shop_repo(db_session: AsyncSession) -> ShopRepository:
 class ShopController(Controller):
     """Shop CRUD"""
 
-    path = "/shops"
+    path = "/api/shops"
     dependencies = {"shop_repo": Provide(provide_shop_repo)}
 
     @get()

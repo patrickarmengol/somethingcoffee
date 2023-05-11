@@ -6,7 +6,7 @@ const map = L.map("map", { layers: [osm], minZoom: 5 });
 map.setView([35.68, 139.76], 13);
 
 async function load_markers() {
-  const markers_url = `/shops/geojson`;
+  const markers_url = `/api/shops/geojson`;
   const response = await fetch(markers_url);
   const geojson = await response.json();
   return geojson;
