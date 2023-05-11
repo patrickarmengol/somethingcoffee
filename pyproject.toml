@@ -4,6 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coffeetanuki"
-version = "0.0.1"
+version = "0.1.0"
 description = "discover nearby specialty coffee"
-dependencies = ["litestar", "sqlalchemy", "geoalchemy2", "uvicorn", "pydantic"]
+dependencies = [
+  "litestar",
+  "sqlalchemy",
+  "geoalchemy2",
+  "uvicorn",
+  "pydantic",
+  "alembic",
+  "jinja2",
+  "shapely",
+]
