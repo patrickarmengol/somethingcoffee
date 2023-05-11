@@ -1,4 +1,3 @@
-from functools import lru_cache
 from pydantic import BaseSettings, PostgresDsn, ValidationError, parse_obj_as
 
 
@@ -15,7 +14,6 @@ class DatabaseSettings(BaseSettings):
     )
 
 
-@lru_cache
 def load_settings() -> tuple[DatabaseSettings]:
     try:
         db: DatabaseSettings = DatabaseSettings.parse_obj({})

@@ -1,10 +1,8 @@
-from functools import lru_cache
 from pathlib import Path
 import pkgutil
 from importlib.machinery import SourceFileLoader
 
 
-@lru_cache()
 def module_to_os_path(dotted_path: str = "app") -> Path:
     """Find Module to OS Path.
 
