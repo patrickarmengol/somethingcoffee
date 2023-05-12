@@ -29,14 +29,24 @@ class ShopController(Controller):
     path = "/api/shops"
     dependencies = {"shop_repo": Provide(provide_shop_repo)}
 
-    @get()
+    @get(
+        path="",
+        operation_id="ListShops",
+        name="shops:list",
+        summary="List all shops.",
+    )
     async def list_shops(
         self,
         shop_repo: ShopRepository,
     ) -> list[schemas.Shop]:
         return parse_obj_as(list[schemas.Shop], await shop_repo.list())
 
-    @get("/geojson")
+    @get(
+        path="/geojson",
+        operation_id="ListShopsGeoJSON",
+        name="shops:listgeojson",
+        summary="List all shops in GeoJSON format.",
+    )
     async def list_shops_geojson(
         self,
         shop_repo: ShopRepository,
@@ -55,7 +65,12 @@ class ShopController(Controller):
             geojson["features"].append(feature)
         return geojson
 
-    @get("/{shop_id:uuid}")
+    @get(
+        path="/{shop_id:uuid}",
+        operation_id="GetShop",
+        name="shops:get",
+        summary="Get a shop by its ID.",
+    )
     async def get_shop(
         self,
         shop_repo: ShopRepository,
@@ -66,7 +81,12 @@ class ShopController(Controller):
     ) -> schemas.Shop:
         return schemas.Shop.from_orm(await shop_repo.get(shop_id))
 
-    @post()
+    @post(
+        path="",
+        operation_id="CreateShop",
+        name="shops:create",
+        summary="Create a new shop.",
+    )
     async def create_shop(
         self,
         shop_repo: ShopRepository,

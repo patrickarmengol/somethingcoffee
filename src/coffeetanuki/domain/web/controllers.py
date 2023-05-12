@@ -7,6 +7,6 @@ class WebController(Controller):
 
     path = ""
 
-    @get("/map", include_in_schema=False)
+    @get(path="/map", include_in_schema=False)
     async def homepage(self) -> Template:
         return Template(name="map.html.jinja2")
