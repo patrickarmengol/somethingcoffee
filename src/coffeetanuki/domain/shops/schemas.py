@@ -17,6 +17,7 @@ class ShopBase(BaseModel):
     address: str
     coordinates: Coordinates
     roaster: str | None
+    hours_of_operation: str | None
 
 
 class ShopCreate(ShopBase):
