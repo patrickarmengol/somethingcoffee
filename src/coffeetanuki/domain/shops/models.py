@@ -19,3 +19,4 @@ class Shop(UUIDBase):
         )
     )
     roaster: Mapped[str | None]
+    hours_of_operation: Mapped[str | None]

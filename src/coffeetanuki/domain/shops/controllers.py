@@ -98,6 +98,7 @@ class ShopController(Controller):
                 address=data.address,
                 coordinates=f"Point({data.coordinates.lon} {data.coordinates.lat})",
                 roaster=data.roaster,
+                hours_of_operation=data.hours_of_operation,
             )
         )
         await shop_repo.session.commit()
