@@ -16,6 +16,7 @@ class ShopBase(BaseModel):
     name: str
     address: str
     coordinates: Coordinates
+    roaster: str | None
 
 
 class ShopCreate(ShopBase):

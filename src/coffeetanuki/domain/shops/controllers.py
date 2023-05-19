@@ -97,6 +97,7 @@ class ShopController(Controller):
                 name=data.name,
                 address=data.address,
                 coordinates=f"Point({data.coordinates.lon} {data.coordinates.lat})",
+                roaster=data.roaster,
             )
         )
         await shop_repo.session.commit()

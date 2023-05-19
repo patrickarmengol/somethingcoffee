@@ -18,3 +18,4 @@ class Shop(UUIDBase):
             # spatial_index=True,
         )
     )
+    roaster: Mapped[str | None]
