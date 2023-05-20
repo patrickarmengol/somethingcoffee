@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from coffeetanuki.domain.shops import models, schemas
 
-__all__ = ["ShopController"]
+__all__ = ["ShopRepository", "provide_shop_repo", "ShopController"]
 
 
 class ShopRepository(SQLAlchemyAsyncRepository[models.Shop]):
