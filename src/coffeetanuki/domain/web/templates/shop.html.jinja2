@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Shop Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+  </head>
+  <body>
+    <nav class="bg-blue-500 py-4">
+      <div class="container mx-auto flex items-center justify-between px-4">
+        <a href="/" class="text-white text-2xl font-bold">CoffeeTanuki</a>
+        <div>
+          <a href="/" class="text-white mx-2 hover:underline">Home</a>
+          <a href="/map" class="text-white mx-2 hover:underline">Map</a>
+          <a href="/shops" class="text-white mx-2 hover:underline">Shops</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+      <div id="shop-details"></div>
+    </div>
+
+    <script src="{{ url_for_static_asset('scripts', 'shop.js') }}"></script>
+  </body>
+</html>
