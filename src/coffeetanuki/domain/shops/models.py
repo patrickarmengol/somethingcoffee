@@ -17,11 +17,12 @@ shop_amenity = Table(
 
 
 class Amenity(UUIDBase):
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(String(), unique=True)
 
     shops: Mapped[list[Shop]] = relationship(
         secondary=shop_amenity,
         back_populates="amenities",
+        lazy="selectin",
     )
 
 
@@ -42,4 +43,5 @@ class Shop(UUIDBase):
     amenities: Mapped[list[Amenity]] = relationship(
         secondary=shop_amenity,
         back_populates="shops",
+        lazy="selectin",
     )
