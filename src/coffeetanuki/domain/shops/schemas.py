@@ -1,3 +1,4 @@
+from __future__ import annotations
 from geoalchemy2 import WKBElement, shape
 from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
@@ -12,6 +13,21 @@ class Coordinates(BaseModel):
     lat: float
 
 
+class AmenityBase(BaseModel):
+    name: str
+
+
+class AmenityCreate(AmenityBase):
+    pass
+
+
+class Amenity(AmenityBase):
+    id: UUID4
+
+    class Config:
+        orm_mode = True
+
+
 class ShopBase(BaseModel):
     name: str
     address: str
@@ -21,11 +37,11 @@ class ShopBase(BaseModel):
 
 
 class ShopCreate(ShopBase):
-    pass
+    amenities: list[AmenityCreate]
 
 
 class Shop(ShopBase):
-    id: UUID4 | None
+    id: UUID4
 
     @validator("coordinates", pre=True)
     def to_coords(cls, v):
@@ -42,3 +58,11 @@ class Shop(ShopBase):
 
     class Config:
         orm_mode = True
+
+
+class AmenityReturn(Amenity):
+    shops: list[Shop]
+
+
+class ShopReturn(Shop):
+    amenities: list[Amenity]
