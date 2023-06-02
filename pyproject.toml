@@ -11,7 +11,7 @@ dependencies = [
   "sqlalchemy",
   "geoalchemy2",
   "uvicorn",
-  "pydantic",
+  "pydantic[dotenv]",
   "alembic",
   "jinja2",
   "shapely",
