@@ -1,6 +1,8 @@
 # coffeetanuki
 
-discover nearby specialty coffee
+website for discovering specialty coffee shops
+
+> disclaimer: this project is a work in progress
 
 ---
 
