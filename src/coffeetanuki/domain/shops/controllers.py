@@ -242,9 +242,31 @@ class AmenityAPIController(Controller):
     )
     async def create_amenity(
         self,
-        r_amenity_repo: AmenityRepository,
+        amenity_repo: AmenityRepository,
         data: schemas.AmenityCreate,
-    ) -> schemas.AmenityDBFull:
-        obj = await r_amenity_repo.add(models.Amenity(**data.dict()))
-        await r_amenity_repo.session.commit()
-        return schemas.AmenityDBFull.from_orm(obj)
+    ) -> schemas.AmenityDB:
+        obj = await amenity_repo.add(models.Amenity(**data.dict()))
+        await amenity_repo.session.commit()
+        return schemas.AmenityDB.from_orm(obj)
+
+    # update amenity
+    @patch(
+        path="/{amenity_id:uuid}",
+        operation_id="UpdateAmenity",
+        name="amenities:update",
+        summary="Update an amenity by its ID",
+    )
+    async def update_amenity(
+        self,
+        amenity_repo: AmenityRepository,
+        data: schemas.AmenityUpdate,
+        amenity_id: UUID = Parameter(
+            title="Amenity ID",
+            description="The amenity to update",
+        ),
+    ) -> schemas.AmenityDB:
+        dd = data.dict(exclude_unset=True)
+        dd.update({"id": amenity_id})
+        obj = await amenity_repo.update(models.Amenity(**dd))
+        await amenity_repo.session.commit()
+        return schemas.AmenityDB.from_orm(obj)
