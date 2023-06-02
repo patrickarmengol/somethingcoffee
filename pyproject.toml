@@ -15,4 +15,5 @@ dependencies = [
   "alembic",
   "jinja2",
   "shapely",
+  "asyncpg",
 ]
