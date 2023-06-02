@@ -4,7 +4,7 @@ from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
 
 
-__all__ = ["Coordinates", "ShopBase", "ShopCreate", "Shop"]
+__all__ = ["Coordinates", "ShopBase", "ShopCreate", "ShopDB"]
 
 
 class Coordinates(BaseModel):
@@ -21,7 +21,7 @@ class AmenityCreate(AmenityBase):
     pass
 
 
-class Amenity(AmenityBase):
+class AmenityDB(AmenityBase):
     id: UUID4
 
     class Config:
@@ -40,7 +40,7 @@ class ShopCreate(ShopBase):
     amenities: list[AmenityCreate]
 
 
-class Shop(ShopBase):
+class ShopDB(ShopBase):
     id: UUID4
 
     @validator("coordinates", pre=True)
@@ -60,9 +60,9 @@ class Shop(ShopBase):
         orm_mode = True
 
 
-class AmenityReturn(Amenity):
-    shops: list[Shop]
+class AmenityDBFull(AmenityDB):
+    shops: list[ShopDB]
 
 
-class ShopReturn(Shop):
-    amenities: list[Amenity]
+class ShopDBFull(ShopDB):
+    amenities: list[AmenityDB]
