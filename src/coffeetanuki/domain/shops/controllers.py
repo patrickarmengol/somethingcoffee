@@ -69,7 +69,6 @@ class ShopAPIController(Controller):
         operation_id="ListShops",
         name="shops:list",
         summary="List all shops.",
-        dependencies={"shop_repo": Provide(provide_r_shop_repo)},
     )
     async def list_shops(
         self,
