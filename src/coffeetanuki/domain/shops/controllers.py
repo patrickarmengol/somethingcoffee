@@ -270,3 +270,21 @@ class AmenityAPIController(Controller):
         obj = await amenity_repo.update(models.Amenity(**dd))
         await amenity_repo.session.commit()
         return schemas.AmenityDB.from_orm(obj)
+
+    # delete amenity
+    @delete(
+        path="/{amenity_id:uuid}",
+        operation_id="DeleteAmenity",
+        name="amenities:delete",
+        summary="Delete an amenity by its ID",
+    )
+    async def delete_amenity(
+        self,
+        r_amenity_repo: AmenityRepository,
+        amenity_id: UUID = Parameter(
+            title="Amenity ID",
+            description="The amenity to delete",
+        ),
+    ) -> None:
+        _ = await r_amenity_repo.delete(amenity_id)
+        await r_amenity_repo.session.commit()
