@@ -198,32 +198,34 @@ class AmenityAPIController(Controller):
     """Amenity CRUD"""
 
     path = "/api/amenities"
+    dependencies = {
+        "amenity_repo": Provide(provide_amenity_repo),
+        "r_amenity_repo": Provide(provide_r_amenity_repo),
+    }
 
     @get(
         path="",
         operation_id="ListAmenities",
         name="amenities:list",
         summary="List all amenities.",
-        dependencies={"amenity_repo": Provide(provide_r_amenity_repo)},
     )
     async def list_amenities(
         self,
-        amenity_repo: AmenityRepository,
+        r_amenity_repo: AmenityRepository,
     ) -> list[schemas.AmenityDBFull]:
-        return parse_obj_as(list[schemas.AmenityDBFull], await amenity_repo.list())
+        return parse_obj_as(list[schemas.AmenityDBFull], await r_amenity_repo.list())
 
     @post(
         path="",
         operation_id="CreateAmenity",
         name="amenities:create",
         summary="Create a new amenity.",
-        dependencies={"amenity_repo": Provide(provide_r_amenity_repo)},
     )
     async def create_amenity(
         self,
-        amenity_repo: AmenityRepository,
+        r_amenity_repo: AmenityRepository,
         data: schemas.AmenityCreate,
     ) -> schemas.AmenityDBFull:
-        obj = await amenity_repo.add(models.Amenity(**data.dict()))
-        await amenity_repo.session.commit()
+        obj = await r_amenity_repo.add(models.Amenity(**data.dict()))
+        await r_amenity_repo.session.commit()
         return schemas.AmenityDBFull.from_orm(obj)
