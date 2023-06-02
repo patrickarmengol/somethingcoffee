@@ -4,7 +4,7 @@ from coffeetanuki.domain import shops, web
 __all__ = ["routes", "shops", "web"]
 
 routes: list[ControllerRouterHandler] = [
-    shops.controllers.ShopController,
-    shops.controllers.AmenityController,
+    shops.controllers.ShopAPIController,
+    shops.controllers.AmenityAPIController,
     web.controllers.WebController,
 ]
