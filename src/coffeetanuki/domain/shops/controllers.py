@@ -203,6 +203,7 @@ class AmenityAPIController(Controller):
         "r_amenity_repo": Provide(provide_r_amenity_repo),
     }
 
+    # list amenities
     @get(
         path="",
         operation_id="ListAmenities",
@@ -215,6 +216,24 @@ class AmenityAPIController(Controller):
     ) -> list[schemas.AmenityDBFull]:
         return parse_obj_as(list[schemas.AmenityDBFull], await r_amenity_repo.list())
 
+    # get amenity by id
+    @get(
+        path="/{amenity_id:uuid}",
+        operation_id="GetAmenity",
+        name="amenities:get",
+        summary="Get an amenity by its ID.",
+    )
+    async def get_amenity(
+        self,
+        r_amenity_repo: AmenityRepository,
+        amenity_id: UUID = Parameter(
+            title="Amenity ID",
+            description="Amenity to retrieve",
+        ),
+    ) -> schemas.AmenityDBFull:
+        return schemas.AmenityDBFull.from_orm(await r_amenity_repo.get(amenity_id))
+
+    # create amenity
     @post(
         path="",
         operation_id="CreateAmenity",
