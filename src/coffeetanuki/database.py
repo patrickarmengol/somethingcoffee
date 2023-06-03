@@ -7,14 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from coffeetanuki.settings import db
 
-engine = create_async_engine(db.URL)
 
+# create engine and session_maker manually to allow for expire_on_commit=False
+engine = create_async_engine(db.URL)
 async_session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
     engine,
-    expire_on_commit=False,
+    expire_on_commit=False,  # ensures joined attributes are available after commit
 )
 
-# TODO: replace with env vars parsed in settings.py
+# setup sqla config and pass it to plugin
 sqlalchemy_config = SQLAlchemyAsyncConfig(
     engine_instance=engine,
     session_maker=async_session_factory,
