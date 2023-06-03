@@ -7,6 +7,8 @@ from litestar.template.config import TemplateConfig
 
 from coffeetanuki import utils
 
+__all__ = ["template_config", "static_files_config"]
+
 DEFAULT_MODULE_NAME = "coffeetanuki"
 BASE_DIR: Final = utils.module_to_os_path(DEFAULT_MODULE_NAME)
 TEMPLATES_DIR = Path(BASE_DIR / "domain" / "web" / "templates")
