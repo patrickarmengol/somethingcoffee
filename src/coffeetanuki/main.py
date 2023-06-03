@@ -11,6 +11,6 @@ app = Litestar(
     plugins=[sqlalchemy_plugin],
     template_config=template_config,
     static_files_config=static_files_config,
-    type_encoders={**DEFAULT_TYPE_ENCODERS, pgproto.UUID: str},
+    type_encoders={**DEFAULT_TYPE_ENCODERS, pgproto.UUID: str},  # postgres UUID support
     debug=True,
 )
