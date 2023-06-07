@@ -31,8 +31,8 @@ class AmenityCreate(AmenityBase):
     pass
 
 
-class AmenityUpdate(AmenityBase):
-    pass
+class AmenityUpdate(BaseModel):
+    name: str | None
 
 
 class AmenityDB(AmenityBase):
@@ -54,8 +54,13 @@ class ShopCreate(ShopBase):
     amenities: list[str]
 
 
-class ShopUpdate(ShopBase):
-    amenities: list[str]
+class ShopUpdate(BaseModel):
+    name: str | None
+    address: str | None
+    coordinates: Coordinates | None
+    roaster: str | None
+    hours_of_operation: str | None
+    amenities: list[str] | None
 
 
 class ShopDB(ShopBase):

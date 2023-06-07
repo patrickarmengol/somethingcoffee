@@ -170,9 +170,9 @@ class ShopAPIController(Controller):
     ) -> schemas.ShopDBFull:
         dd = data.dict(exclude_unset=True)
         dd.update({"id": shop_id})
-        if "coordinates" in dd:
+        if "coordinates" in dd and data.coordinates:
             dd["coordinates"] = f"Point({data.coordinates.lon} {data.coordinates.lat})"
-        if "amenities" in dd:
+        if "amenities" in dd and data.amenities:
             dd["amenities"] = await amenity_repo.list(
                 CollectionFilter("name", data.amenities)
             )
