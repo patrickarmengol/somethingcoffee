@@ -14,6 +14,7 @@ BASE_DIR: Final = utils.module_to_os_path(DEFAULT_MODULE_NAME)
 TEMPLATES_DIR = Path(BASE_DIR / "domain" / "web" / "templates")
 SCRIPTS_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "scripts")
 STYLES_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "styles")
+IMAGES_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "images")
 
 template_config = TemplateConfig(
     directory=Path(TEMPLATES_DIR),
@@ -27,4 +28,5 @@ static_files_config = [
         path="/scripts",
     ),
     StaticFilesConfig(name="styles", directories=[STYLES_DIR], path="/styles"),
+    StaticFilesConfig(name="images", directories=[IMAGES_DIR], path="/images"),
 ]
