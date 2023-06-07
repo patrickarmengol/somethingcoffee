@@ -69,6 +69,7 @@ class ShopAPIController(Controller):
         operation_id="ListShops",
         name="shops:list",
         summary="List all shops.",
+        tags=["shops"],
     )
     async def list_shops(
         self,
@@ -82,6 +83,7 @@ class ShopAPIController(Controller):
         operation_id="ListShopsGeoJSON",
         name="shops:listgeojson",
         summary="List all shops in GeoJSON format.",
+        tags=["shops"],
     )
     async def list_shops_geojson(
         self,
@@ -107,6 +109,7 @@ class ShopAPIController(Controller):
         operation_id="GetShop",
         name="shops:get",
         summary="Get a shop by its ID.",
+        tags=["shops"],
     )
     async def get_shop(
         self,
@@ -124,6 +127,7 @@ class ShopAPIController(Controller):
         operation_id="CreateShop",
         name="shops:create",
         summary="Create a new shop.",
+        tags=["shops"],
     )
     async def create_shop(
         self,
@@ -152,6 +156,7 @@ class ShopAPIController(Controller):
         operation_id="UpdateShop",
         name="shops:update",
         summary="Update a shop by its ID.",
+        tags=["shops"],
     )
     async def update_shop(
         self,
@@ -181,6 +186,7 @@ class ShopAPIController(Controller):
         operation_id="DeleteShop",
         name="shops:delete",
         summary="Delete a shop by its ID",
+        tags=["shops"],
     )
     async def delete_shop(
         self,
@@ -209,6 +215,7 @@ class AmenityAPIController(Controller):
         operation_id="ListAmenities",
         name="amenities:list",
         summary="List all amenities.",
+        tags=["amenities"],
     )
     async def list_amenities(
         self,
@@ -222,6 +229,7 @@ class AmenityAPIController(Controller):
         operation_id="GetAmenity",
         name="amenities:get",
         summary="Get an amenity by its ID.",
+        tags=["amenities"],
     )
     async def get_amenity(
         self,
@@ -239,6 +247,7 @@ class AmenityAPIController(Controller):
         operation_id="CreateAmenity",
         name="amenities:create",
         summary="Create a new amenity.",
+        tags=["amenities"],
     )
     async def create_amenity(
         self,
@@ -255,6 +264,7 @@ class AmenityAPIController(Controller):
         operation_id="UpdateAmenity",
         name="amenities:update",
         summary="Update an amenity by its ID",
+        tags=["amenities"],
     )
     async def update_amenity(
         self,
@@ -277,6 +287,7 @@ class AmenityAPIController(Controller):
         operation_id="DeleteAmenity",
         name="amenities:delete",
         summary="Delete an amenity by its ID",
+        tags=["amenities"],
     )
     async def delete_amenity(
         self,
