@@ -3,10 +3,14 @@ from litestar.response_containers import Template
 
 
 class WebController(Controller):
-    """Website rendering"""
+    """General webpage rendering"""
 
     path = ""
 
+    @get(path="/", include_in_schema=False)
+    async def home_page(self) -> Template:
+        return Template(name="views/home.html.jinja")
+
     @get(path="/map", include_in_schema=False)
-    async def homepage(self) -> Template:
-        return Template(name="map.html.jinja")
+    async def map_page(self) -> Template:
+        return Template(name="views/map.html.jinja")

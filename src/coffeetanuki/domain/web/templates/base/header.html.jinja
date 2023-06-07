@@ -1,0 +1,34 @@
+<header>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="{{ url_for_static_asset('images', 'ctlogo.png') }}" width="128" height="32">
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="nav-links">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="nav-links" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="/">
+          Home
+        </a>
+
+        <a class="navbar-item" href="/map">
+          Map
+        </a>
+
+        <a class="navbar-item" href="/shops">
+          Shops
+        </a>
+
+      </div>
+
+    </div>
+  </nav>
+</header>
+
