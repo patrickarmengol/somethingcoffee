@@ -8,8 +8,14 @@
 {% block title %}Map - CoffeeTanuki{% endblock %}
 
 {% block content %}
-<div id="map" style="height: 80vh">
-</div>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Shop Map</h1>
+    <p class="subtitle">click on shop markers to learn more</h1>
+    <div id="map" style="height: 60vh">
+    </div>
+  </div>
+</section>
 {% endblock %}
 
 {% block body_scripts %}<script src="{{ url_for_static_asset('scripts', 'map.js') }}"></script>{% endblock %}
