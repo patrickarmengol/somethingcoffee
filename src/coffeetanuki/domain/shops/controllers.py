@@ -6,6 +6,7 @@ from litestar.contrib.repository.filters import CollectionFilter
 from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from litestar.di import Provide
 from litestar.params import Parameter
+from litestar.response_containers import Template
 from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,7 +14,7 @@ from sqlalchemy.orm import selectinload
 
 from coffeetanuki.domain.shops import models, schemas
 
-__all__ = ["ShopAPIController", "AmenityAPIController"]
+__all__ = ["ShopAPIController", "AmenityAPIController", "ShopWebController"]
 
 
 class ShopRepository(SQLAlchemyAsyncRepository[models.Shop]):
@@ -299,3 +300,33 @@ class AmenityAPIController(Controller):
     ) -> None:
         _ = await r_amenity_repo.delete(amenity_id)
         await r_amenity_repo.session.commit()
+
+
+class ShopWebController(Controller):
+    """Shop webpage rendering"""
+
+    path = "/shops"
+    dependencies = {
+        "shop_repo": Provide(provide_shop_repo),
+        "r_shop_repo": Provide(provide_r_shop_repo),
+    }
+
+    @get(path="", include_in_schema=False)
+    async def shop_list_page(
+        self,
+        r_shop_repo: ShopRepository,
+    ) -> Template:
+        shops = parse_obj_as(list[schemas.ShopDBFull], await r_shop_repo.list())
+        return Template("views/shop-list.html.jinja", context={"shops": shops})
+
+    @get(path="/{shop_id:uuid}", include_in_schema=False)
+    async def shop_details_page(
+        self,
+        r_shop_repo: ShopRepository,
+        shop_id: UUID = Parameter(
+            title="Shop ID",
+            description="The shop to retrieve",
+        ),
+    ) -> Template:
+        shop = schemas.ShopDBFull.from_orm(await r_shop_repo.get(shop_id))
+        return Template("views/shop-details.html.jinja", context={"shop": shop})

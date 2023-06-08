@@ -6,5 +6,6 @@ __all__ = ["routes", "shops", "web"]
 routes: list[ControllerRouterHandler] = [
     shops.controllers.ShopAPIController,
     shops.controllers.AmenityAPIController,
+    shops.controllers.ShopWebController,
     web.controllers.WebController,
 ]

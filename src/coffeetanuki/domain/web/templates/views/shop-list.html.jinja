@@ -1,0 +1,39 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Shops - CoffeeTanuki{% endblock %}
+
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Shop List</h1>
+    <table class="table is-striped is-fullwidth">  
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>address</th>
+          <th>roaster</th>
+          <th>hours</th>
+          <th>amenities</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shop in shops %}
+        <tr>
+          <td><a href="/shops/{{ shop.id }}">{{ shop.name }}</a></td>
+          <td>{{ shop.address }}</td>
+          <td>{{ shop.roaster }}</td>
+          <td>{{ shop.hours_of_operation }}</td>
+          <td>
+            {% for amenity in shop.amenities %}
+            <span class="tag">{{ amenity.name }}</span>
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
