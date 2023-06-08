@@ -10,17 +10,29 @@
     <div class="columns">
       <div class="column is-6">
         <h2 class="subtitle has-text-centered">info</h2>
-        <div class="notification">
+        <div class="notification p-5">
           <div class="columns">
-            <div class="column is-half has-text-right">
-              <p><strong>address:</strong></p>
-              <p><strong>roaster:</strong></p>
-              <p><strong>hours:</strong></p>
+            <div class="column is-half">
+              <p class="has-text-right-desktop"><strong>address:</strong></p>
             </div>
-            <div class="column is-half has-text-left">
-              <p>{{ shop.address }}</p>
-              <p>{{ shop.roaster }}</p>
-              <p>{{ shop.hours_of_operation }}</p>
+            <div class="column is-half">
+              <p class="has-text-left-desktop">{{ shop.address }}</p>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-half">
+              <p class="has-text-right-desktop"><strong>roaster:</strong></p>
+            </div>
+            <div class="column is-half">
+              <p class="has-text-left-desktop">{{ shop.roaster }}</p>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-half">
+              <p class="has-text-right-desktop"><strong>hours:</strong></p>
+            </div>
+            <div class="column is-half">
+              <p class="has-text-left-desktop">{{ shop.hours_of_operation }}</p>
             </div>
           </div>
         </div>
