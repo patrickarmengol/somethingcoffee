@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for_static_asset('styles', 'base.css') }}">
     {% block styles %}{% endblock %}
     {% block head_scripts %}{% endblock %}
-    <title>{% block title %}CoffeeTanuki{% endblock %}</title>
+    <title>{% block title %}{% endblock %} - CoffeeTanuki</title>
   </head>
   <body class="site">
     {% include "base/header.html.jinja" %}
