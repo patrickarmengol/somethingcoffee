@@ -34,7 +34,7 @@
                 <p class="has-text-right-desktop"><strong>roaster:</strong></p>
               </div>
               <div class="column is-half">
-                <p class="has-text-left-desktop">{{ shop.roaster }}</p>
+                <p class="has-text-left-desktop">{{ shop.roaster or "unknown" }}</p>
               </div>
             </div>
             <div class="columns">
@@ -42,7 +42,7 @@
                 <p class="has-text-right-desktop"><strong>hours:</strong></p>
               </div>
               <div class="column is-half">
-                <p class="has-text-left-desktop">{{ shop.hours_of_operation }}</p>
+                <p class="has-text-left-desktop">{{ shop.hours_of_operation or "unknown" }}</p>
               </div>
             </div>
           </div>
