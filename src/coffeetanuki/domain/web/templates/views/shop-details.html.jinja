@@ -1,5 +1,14 @@
 {% extends "base/base.html.jinja" %}
 
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="https:///unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block head_scripts %}
+<script src="https:///unpkg.com/leaflet/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block title %}Shop Details: {{ shop.name }}{% endblock %}
 
 
@@ -58,9 +67,25 @@
     </div>
   </section>
   <section class="section">
-    <div class="container">
-      <h2 class="subtitle has-text-centered">map goes here</h2>
+    <div class="container has-text-centered">
+      <h2 class="subtitle">location</h2>
+      <div class="is-flex is-justify-content-center is-align-content-center">
+        <div id="map" style="height: 400px; width: 600px">
+        </div>
+      </div>
     </div>
   </section>
 </main>
+{% endblock %}
+
+
+{% block body_scripts %}
+<script src="{{ url_for_static_asset('scripts', 'map.js') }}"></script>
+<script>
+  L.marker([{{shop.coordinates.lat}}, {{shop.coordinates.lon}}])
+    .bindPopup("{{shop.name}}")
+    .addTo(map)
+  map.setView([{{shop.coordinates.lat}}, {{shop.coordinates.lon}}], 13)
+</script>
+
 {% endblock %}
