@@ -284,7 +284,7 @@ class AmenityAPIController(Controller):
         path="/{amenity_id:uuid}",
         operation_id="UpdateAmenity",
         name="amenities:update",
-        summary="Update an amenity by its ID",
+        summary="Update an amenity by its ID.",
         tags=["amenities"],
     )
     async def update_amenity(
@@ -307,7 +307,7 @@ class AmenityAPIController(Controller):
         path="/{amenity_id:uuid}",
         operation_id="DeleteAmenity",
         name="amenities:delete",
-        summary="Delete an amenity by its ID",
+        summary="Delete an amenity by its ID.",
         tags=["amenities"],
     )
     async def delete_amenity(
