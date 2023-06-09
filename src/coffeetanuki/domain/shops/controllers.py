@@ -141,6 +141,37 @@ class ShopAPIController(Controller):
         await r_shop_repo.session.commit()
         return schemas.ShopDBFull.from_orm(obj)
 
+    #
+    # @post(
+    #     path="/bulk",
+    #     operation_id="BulkCreateShop",
+    #     name="shops:bulkcreate",
+    #     summary="Create multiple new shops.",
+    #     tags=["shops"],
+    # )
+    # async def bulk_create_shop(
+    #     self,
+    #     r_shop_repo: ShopRepository,
+    #     amenity_repo: AmenityRepository,
+    #     data: list[schemas.ShopCreate],
+    # ) -> list[schemas.ShopDBFull]:
+    #     # create a dict to lookup amenities by name
+    #     # avoids amenity table transfer for each new shop
+    #     amens = {a.name: a for a in await amenity_repo.list()}
+    #     new_shops: list[models.Shop] = []
+    #     for d in data:
+    #         dd = d.dict()
+    #         dd.update(
+    #             {
+    #                 "coordinates": f"Point({d.coordinates.lon} {d.coordinates.lat})",
+    #                 "amenities": [amens[n] for n in d.amenities],
+    #             }
+    #         )
+    #         new_shops.append(models.Shop(**dd))
+    #     obj = await r_shop_repo.add_many(new_shops)
+    #     await r_shop_repo.session.commit()
+    #     return parse_obj_as(list[schemas.ShopDBFull], obj)
+
     # update shop by id
     @patch(
         path="/{shop_id:uuid}",
