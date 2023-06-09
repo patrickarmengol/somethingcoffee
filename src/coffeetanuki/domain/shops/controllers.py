@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from coffeetanuki.domain.shops import models, schemas
+from coffeetanuki.domain.shops.utils import geojsonify
 
 __all__ = ["ShopAPIController", "AmenityAPIController", "ShopWebController"]
 
@@ -91,18 +92,7 @@ class ShopAPIController(Controller):
         shop_repo: ShopRepository,
     ) -> dict[str, Any]:
         shops = parse_obj_as(list[schemas.ShopDB], await shop_repo.list())
-        geojson: dict[str, Any] = {"type": "FeatureCollection", "features": []}
-        for shop in shops:
-            feature: dict[str, Any] = {
-                "type": "Feature",
-                "properties": {"name": shop.name},  # perhaps add more attributes here?
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [shop.coordinates.lon, shop.coordinates.lat],
-                },
-            }
-            geojson["features"].append(feature)
-        return geojson
+        return geojsonify(shops)
 
     # get shop by id
     @get(
