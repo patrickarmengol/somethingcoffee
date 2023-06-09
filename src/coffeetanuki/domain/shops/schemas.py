@@ -48,6 +48,7 @@ class ShopBase(BaseModel):
     coordinates: Coordinates
     roaster: str | None
     hours_of_operation: str | None
+    description: str | None
 
 
 class ShopCreate(ShopBase):
@@ -60,6 +61,7 @@ class ShopUpdate(BaseModel):
     coordinates: Coordinates | None
     roaster: str | None
     hours_of_operation: str | None
+    description: str | None
     amenities: list[str] | None
 
 

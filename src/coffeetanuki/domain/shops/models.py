@@ -39,6 +39,7 @@ class Shop(UUIDBase):
     )
     roaster: Mapped[str | None]
     hours_of_operation: Mapped[str | None]
+    description: Mapped[str | None]
 
     amenities: Mapped[list[Amenity]] = relationship(
         secondary=shop_amenity,
