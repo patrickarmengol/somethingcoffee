@@ -91,8 +91,7 @@ class ShopAPIController(Controller):
         self,
         shop_repo: ShopRepository,
     ) -> dict[str, Any]:
-        shops = parse_obj_as(list[schemas.ShopDB], await shop_repo.list())
-        return geojsonify(shops)
+        return geojsonify(parse_obj_as(list[schemas.ShopDB], await shop_repo.list()))
 
     # get shop by id
     @get(
@@ -110,7 +109,7 @@ class ShopAPIController(Controller):
             description="The shop to retrieve",
         ),
     ) -> schemas.ShopDBFull:
-        return schemas.ShopDBFull.from_orm(await r_shop_repo.get(shop_id))
+        return parse_obj_as(schemas.ShopDBFull, await r_shop_repo.get(shop_id))
 
     # create shop
     @post(
@@ -139,7 +138,7 @@ class ShopAPIController(Controller):
         )
         obj = await r_shop_repo.add(models.Shop(**dd))
         await r_shop_repo.session.commit()
-        return schemas.ShopDBFull.from_orm(obj)
+        return parse_obj_as(schemas.ShopDBFull, obj)
 
     #
     # @post(
@@ -200,14 +199,14 @@ class ShopAPIController(Controller):
             )
         obj = await r_shop_repo.update(models.Shop(**dd))
         await r_shop_repo.session.commit()
-        return schemas.ShopDBFull.from_orm(obj)
+        return parse_obj_as(schemas.ShopDBFull, obj)
 
     # delete shop by id
     @delete(
         path="/{shop_id:uuid}",
         operation_id="DeleteShop",
         name="shops:delete",
-        summary="Delete a shop by its ID",
+        summary="Delete a shop by its ID.",
         tags=["shops"],
     )
     async def delete_shop(
@@ -261,7 +260,7 @@ class AmenityAPIController(Controller):
             description="Amenity to retrieve",
         ),
     ) -> schemas.AmenityDBFull:
-        return schemas.AmenityDBFull.from_orm(await r_amenity_repo.get(amenity_id))
+        return parse_obj_as(schemas.AmenityDBFull, await r_amenity_repo.get(amenity_id))
 
     # create amenity
     @post(
@@ -278,7 +277,7 @@ class AmenityAPIController(Controller):
     ) -> schemas.AmenityDB:
         obj = await amenity_repo.add(models.Amenity(**data.dict()))
         await amenity_repo.session.commit()
-        return schemas.AmenityDB.from_orm(obj)
+        return parse_obj_as(schemas.AmenityDB, obj)
 
     # update amenity
     @patch(
@@ -301,7 +300,7 @@ class AmenityAPIController(Controller):
         dd.update({"id": amenity_id})
         obj = await amenity_repo.update(models.Amenity(**dd))
         await amenity_repo.session.commit()
-        return schemas.AmenityDB.from_orm(obj)
+        return parse_obj_as(schemas.AmenityDB, obj)
 
     # delete amenity
     @delete(
@@ -349,5 +348,5 @@ class ShopWebController(Controller):
             description="The shop to retrieve",
         ),
     ) -> Template:
-        shop = schemas.ShopDBFull.from_orm(await r_shop_repo.get(shop_id))
+        shop = parse_obj_as(schemas.ShopDBFull, await r_shop_repo.get(shop_id))
         return Template("views/shop-details.html.jinja", context={"shop": shop})
