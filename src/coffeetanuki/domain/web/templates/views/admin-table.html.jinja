@@ -2,7 +2,6 @@
 
 {% block title %}{{ table_name|capitalize }} Table{% endblock %}
 
-
 {% block content %}
 <main class="site-content">
   <section class="section">
@@ -34,13 +33,13 @@
             {% endfor %}
             <td>
               <a href="" class="button is-link">
-                <span class="icon"><ion-icon name="eye" class="ion-ionic"></ion-icon></span>
+                <span class="icon iconify" data-icon="mdi-eye"></span>
               </a>
               <a href="" class="button is-primary">
-                <span class="icon"><ion-icon name="pencil" class="ion-ionic"></ion-icon></span>
+                <span class="icon iconify" data-icon="mdi-pencil"></span>
               </a>
               <a href="" class="button is-danger">
-                <span class="icon"><ion-icon name="trash" class="ion-ionic"></ion-icon></span>
+                <span class="icon iconify" data-icon="mdi-delete"></span>
               </a>
             </td>
           </tr>
@@ -53,6 +52,5 @@
 {% endblock %}
 
 {% block body_scripts %}
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
 {% endblock %}
