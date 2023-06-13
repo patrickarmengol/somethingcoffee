@@ -16,10 +16,12 @@ SCRIPTS_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "scripts")
 STYLES_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "styles")
 IMAGES_DIR = Path(BASE_DIR / "domain" / "web" / "static" / "images")
 
+
 template_config = TemplateConfig(
     directory=Path(TEMPLATES_DIR),
     engine=JinjaTemplateEngine,
 )
+
 
 static_files_config = [
     StaticFilesConfig(

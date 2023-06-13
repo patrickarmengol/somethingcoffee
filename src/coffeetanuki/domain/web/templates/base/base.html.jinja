@@ -8,15 +8,15 @@
   <link rel="stylesheet" href="{{ url_for_static_asset('styles', 'base.css') }}">
   {% block styles %}{% endblock %}
   {% block head_scripts %}{% endblock %}
-  <title>{% block title %}{% endblock %} - CoffeeTanuki</title>
+  <title>{% block title %}Base{% endblock %} - CoffeeTanuki</title>
 </head>
 
 <body class="site">
-  {% include "base/header.html.jinja" %}
+  {% block header %}{% include "base/header.html.jinja" %}{% endblock %}
 
   {% block content %}{% endblock %}
 
-  {% include "base/footer.html.jinja" %}
+  {% block footer %}{% include "base/footer.html.jinja" %}{% endblock %}
 
   {% block body_scripts %}{% endblock %}
 </body>

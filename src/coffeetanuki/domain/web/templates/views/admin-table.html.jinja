@@ -1,0 +1,58 @@
+{% extends "base/admin-base.html.jinja" %}
+
+{% block title %}{{ table_name|capitalize }} Table{% endblock %}
+
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <h1 class="is-size-1 title">
+        {{ table_name|capitalize }}
+      </h1>
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            {% for col in cols %}
+            <th>{{ col }}</th>
+            {% endfor %}
+            <th>actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            {% for col in cols %}
+            <td>
+              {%if "." in col %}
+              {% set a, n = col.split(".") %}
+              {{ row[a][n] }}
+              {% else %}
+              {{ row[col] }}
+              {% endif %}
+            </td>
+            {% endfor %}
+            <td>
+              <a href="" class="button is-link">
+                <span class="icon"><ion-icon name="eye" class="ion-ionic"></ion-icon></span>
+              </a>
+              <a href="" class="button is-primary">
+                <span class="icon"><ion-icon name="pencil" class="ion-ionic"></ion-icon></span>
+              </a>
+              <a href="" class="button is-danger">
+                <span class="icon"><ion-icon name="trash" class="ion-ionic"></ion-icon></span>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block body_scripts %}
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}
