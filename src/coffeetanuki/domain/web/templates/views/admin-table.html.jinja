@@ -34,7 +34,7 @@
           <tr>
             {% for col in cols %}
             <td class="is-nowrap">
-              {% if col in ["description"] %}
+              {% if col in ["description"] and row[col] %}
               {{ "..." }}
               {% elif "." in col %}
               {% set a, n = col.split(".") %}
