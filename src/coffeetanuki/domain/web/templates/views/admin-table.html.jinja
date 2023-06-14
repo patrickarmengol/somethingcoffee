@@ -2,6 +2,17 @@
 
 {% block title %}{{ table_name|capitalize }} Table{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bulma.min.css" />
+{% endblock %}
+
+{% block head_scripts %}
+<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bulma.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <main class="site-content">
   <section class="section">
@@ -9,21 +20,23 @@
       <h1 class="is-size-1 title">
         {{ table_name|capitalize }}
       </h1>
-      <table class="table is-fullwidth">
+      <table id="example" class="table is-striped is-hoverable is-fullwidth">
         <thead>
           <tr>
             {% for col in cols %}
             <th>{{ col }}</th>
             {% endfor %}
-            <th>actions</th>
+            <th class="no-sort">actions</th>
           </tr>
         </thead>
         <tbody>
           {% for row in data %}
           <tr>
             {% for col in cols %}
-            <td>
-              {%if "." in col %}
+            <td class="is-nowrap">
+              {% if col in ["description"] %}
+              {{ "..." }}
+              {% elif "." in col %}
               {% set a, n = col.split(".") %}
               {{ row[a][n] }}
               {% else %}
@@ -32,15 +45,17 @@
             </td>
             {% endfor %}
             <td>
-              <a href="" class="button is-link">
-                <span class="icon iconify" data-icon="mdi-eye"></span>
-              </a>
-              <a href="" class="button is-primary">
-                <span class="icon iconify" data-icon="mdi-pencil"></span>
-              </a>
-              <a href="" class="button is-danger">
-                <span class="icon iconify" data-icon="mdi-delete"></span>
-              </a>
+              <div class="buttons is-flex is-flex-wrap-nowrap">
+                <a href="" class="button is-link is-small">
+                  <span class="icon iconify" data-icon="mdi-eye"></span>
+                </a>
+                <a href="" class="button is-primary is-small">
+                  <span class="icon iconify" data-icon="mdi-pencil"></span>
+                </a>
+                <a href="" class="button is-danger is-small">
+                  <span class="icon iconify" data-icon="mdi-delete"></span>
+                </a>
+              </div>
             </td>
           </tr>
           {% endfor %}
@@ -52,5 +67,21 @@
 {% endblock %}
 
 {% block body_scripts %}
-<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+<!-- <script> -->
+<!--   let table = new DataTable('#example'); -->
+<!-- </script> -->
+<script>
+  $(document).ready(function () {
+    $('#example').DataTable({
+      searching: true,     // Enable search functionality
+      ordering: true,      // Enable sorting by header
+      lengthChange: true,  // Enable max rows per page selector
+      paging: true,        // Enable pagination
+      autoWidth: false,
+      columnDefs: [
+        {targets: 'no-sort', orderable: false}  // Disable sorting for columns with specific header names
+      ]
+    });
+  });
+</script>
 {% endblock %}
