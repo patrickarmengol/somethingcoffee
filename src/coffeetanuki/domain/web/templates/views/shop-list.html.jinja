@@ -2,20 +2,30 @@
 
 {% block title %}Shops{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bulma.min.css" />
+{% endblock %}
+
+{% block head_scripts %}
+<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bulma.min.js"></script>
+{% endblock %}
 
 {% block content %}
 <main class="site-content">
   <section class="section">
     <div class="container">
       <h1 class="title has-text-centered">Shops</h1>
-      <table class="table is-striped is-fullwidth">
+      <table id="table" class="table is-striped is-hoverable is-fullwidth">
         <thead>
           <tr>
             <th>name</th>
             <th>address</th>
             <th>roaster</th>
             <th>hours</th>
-            <th>amenities</th>
+            <th class="no-sort">amenities</th>
           </tr>
         </thead>
         <tbody>
@@ -32,10 +42,28 @@
             </td>
           </tr>
           {% endfor %}
-
         </tbody>
       </table>
     </div>
   </section>
 </main>
+{% endblock %}
+
+
+{% block body_scripts %}
+<script>
+  $(document).ready(function () {
+    $('table').DataTable({
+      searching: true,     // Enable search functionality
+      ordering: true,      // Enable sorting by header
+      lengthChange: true,  // Enable max rows per page selector
+      paging: true,        // Enable pagination
+      autoWidth: false,
+      columnDefs: [
+        {targets: 'no-sort', orderable: false},  // Disable sorting for columns with no-sort class
+        {"searchable": true, "targets": -1} // Enable filtering on the last column (tags)
+      ]
+    });
+  });
+</script>
 {% endblock %}

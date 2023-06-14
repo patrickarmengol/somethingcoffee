@@ -20,7 +20,7 @@
       <h1 class="is-size-1 title">
         {{ table_name|capitalize }}
       </h1>
-      <table id="example" class="table is-striped is-hoverable is-fullwidth">
+      <table id="table" class="table is-striped is-hoverable is-fullwidth">
         <thead>
           <tr>
             {% for col in cols %}
@@ -67,19 +67,16 @@
 {% endblock %}
 
 {% block body_scripts %}
-<!-- <script> -->
-<!--   let table = new DataTable('#example'); -->
-<!-- </script> -->
 <script>
   $(document).ready(function () {
-    $('#example').DataTable({
+    $('table').DataTable({
       searching: true,     // Enable search functionality
       ordering: true,      // Enable sorting by header
       lengthChange: true,  // Enable max rows per page selector
       paging: true,        // Enable pagination
       autoWidth: false,
       columnDefs: [
-        {targets: 'no-sort', orderable: false}  // Disable sorting for columns with specific header names
+        {targets: 'no-sort', orderable: false}  // Disable sorting for columns with no-sort class
       ]
     });
   });
