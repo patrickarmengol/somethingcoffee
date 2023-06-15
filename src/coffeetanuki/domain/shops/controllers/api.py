@@ -2,56 +2,33 @@ from typing import Any
 from uuid import UUID
 
 from litestar import Controller, delete, get, patch, post
-from litestar.contrib.repository.filters import CollectionFilter
-from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.response_containers import Template
+from litestar.contrib.repository.filters import CollectionFilter
+
 from pydantic import parse_obj_as
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
-from coffeetanuki.domain.shops import models, schemas
+from coffeetanuki.domain.shops.repositories import (
+    ShopRepository,
+    AmenityRepository,
+    provide_shop_repo,
+    provide_r_shop_repo,
+    provide_amenity_repo,
+    provide_r_amenity_repo,
+)
+
+from coffeetanuki.domain.shops.schemas import (
+    ShopCreate,
+    ShopUpdate,
+    ShopDB,
+    ShopDBFull,
+    AmenityCreate,
+    AmenityUpdate,
+    AmenityDB,
+    AmenityDBFull,
+)
+from coffeetanuki.domain.shops.models import Shop, Amenity
 from coffeetanuki.domain.shops.utils import geojsonify
-
-__all__ = ["ShopAPIController", "AmenityAPIController", "ShopWebController"]
-
-
-class ShopRepository(SQLAlchemyAsyncRepository[models.Shop]):
-    """Shop Repository"""
-
-    model_type = models.Shop
-
-
-async def provide_shop_repo(db_session: AsyncSession) -> ShopRepository:
-    return ShopRepository(
-        session=db_session,
-    )
-
-
-async def provide_r_shop_repo(db_session: AsyncSession) -> ShopRepository:
-    return ShopRepository(
-        statement=select(models.Shop).options(selectinload(models.Shop.amenities)),
-        session=db_session,
-    )
-
-
-class AmenityRepository(SQLAlchemyAsyncRepository[models.Amenity]):
-    """Amenity Repository"""
-
-    model_type = models.Amenity
-
-
-async def provide_amenity_repo(db_session: AsyncSession) -> AmenityRepository:
-    return AmenityRepository(session=db_session)
-
-
-async def provide_r_amenity_repo(db_session: AsyncSession) -> AmenityRepository:
-    return AmenityRepository(
-        statement=select(models.Amenity).options(selectinload(models.Amenity.shops)),
-        session=db_session,
-    )
 
 
 class ShopAPIController(Controller):
@@ -73,11 +50,8 @@ class ShopAPIController(Controller):
         summary="List all shops.",
         tags=["shops"],
     )
-    async def list_shops(
-        self,
-        r_shop_repo: ShopRepository,
-    ) -> list[schemas.ShopDBFull]:
-        return parse_obj_as(list[schemas.ShopDBFull], await r_shop_repo.list())
+    async def list_shops(self, r_shop_repo: ShopRepository) -> list[ShopDBFull]:
+        return parse_obj_as(list[ShopDBFull], await r_shop_repo.list())
 
     # list shops - geojson
     @get(
@@ -91,7 +65,7 @@ class ShopAPIController(Controller):
         self,
         shop_repo: ShopRepository,
     ) -> dict[str, Any]:
-        return geojsonify(parse_obj_as(list[schemas.ShopDB], await shop_repo.list()))
+        return geojsonify(parse_obj_as(list[ShopDB], await shop_repo.list()))
 
     # get shop by id
     @get(
@@ -108,8 +82,8 @@ class ShopAPIController(Controller):
             title="Shop ID",
             description="The shop to retrieve",
         ),
-    ) -> schemas.ShopDBFull:
-        return parse_obj_as(schemas.ShopDBFull, await r_shop_repo.get(shop_id))
+    ) -> ShopDBFull:
+        return parse_obj_as(ShopDBFull, await r_shop_repo.get(shop_id))
 
     # create shop
     @post(
@@ -123,8 +97,8 @@ class ShopAPIController(Controller):
         self,
         r_shop_repo: ShopRepository,
         amenity_repo: AmenityRepository,
-        data: schemas.ShopCreate,
-    ) -> schemas.ShopDBFull:
+        data: ShopCreate,
+    ) -> ShopDBFull:
         dd = data.dict()
         dd.update(
             {
@@ -136,9 +110,9 @@ class ShopAPIController(Controller):
                 else [],
             }
         )
-        obj = await r_shop_repo.add(models.Shop(**dd))
+        obj = await r_shop_repo.add(Shop(**dd))
         await r_shop_repo.session.commit()
-        return parse_obj_as(schemas.ShopDBFull, obj)
+        return parse_obj_as(ShopDBFull, obj)
 
     #
     # @post(
@@ -152,12 +126,12 @@ class ShopAPIController(Controller):
     #     self,
     #     r_shop_repo: ShopRepository,
     #     amenity_repo: AmenityRepository,
-    #     data: list[schemas.ShopCreate],
-    # ) -> list[schemas.ShopDBFull]:
+    #     data: list[ShopCreate],
+    # ) -> list[ShopDBFull]:
     #     # create a dict to lookup amenities by name
     #     # avoids amenity table transfer for each new shop
     #     amens = {a.name: a for a in await amenity_repo.list()}
-    #     new_shops: list[models.Shop] = []
+    #     new_shops: list[Shop] = []
     #     for d in data:
     #         dd = d.dict()
     #         dd.update(
@@ -166,10 +140,10 @@ class ShopAPIController(Controller):
     #                 "amenities": [amens[n] for n in d.amenities],
     #             }
     #         )
-    #         new_shops.append(models.Shop(**dd))
+    #         new_shops.append(Shop(**dd))
     #     obj = await r_shop_repo.add_many(new_shops)
     #     await r_shop_repo.session.commit()
-    #     return parse_obj_as(list[schemas.ShopDBFull], obj)
+    #     return parse_obj_as(list[ShopDBFull], obj)
 
     # update shop by id
     @patch(
@@ -183,12 +157,12 @@ class ShopAPIController(Controller):
         self,
         r_shop_repo: ShopRepository,
         amenity_repo: AmenityRepository,
-        data: schemas.ShopUpdate,
+        data: ShopUpdate,
         shop_id: UUID = Parameter(
             title="Shop ID",
             description="The shop to update",
         ),
-    ) -> schemas.ShopDBFull:
+    ) -> ShopDBFull:
         dd = data.dict(exclude_unset=True)
         dd.update({"id": shop_id})
         if "coordinates" in dd and data.coordinates:
@@ -197,9 +171,9 @@ class ShopAPIController(Controller):
             dd["amenities"] = await amenity_repo.list(
                 CollectionFilter("name", data.amenities)
             )
-        obj = await r_shop_repo.update(models.Shop(**dd))
+        obj = await r_shop_repo.update(Shop(**dd))
         await r_shop_repo.session.commit()
-        return parse_obj_as(schemas.ShopDBFull, obj)
+        return parse_obj_as(ShopDBFull, obj)
 
     # delete shop by id
     @delete(
@@ -241,8 +215,8 @@ class AmenityAPIController(Controller):
     async def list_amenities(
         self,
         r_amenity_repo: AmenityRepository,
-    ) -> list[schemas.AmenityDBFull]:
-        return parse_obj_as(list[schemas.AmenityDBFull], await r_amenity_repo.list())
+    ) -> list[AmenityDBFull]:
+        return parse_obj_as(list[AmenityDBFull], await r_amenity_repo.list())
 
     # get amenity by id
     @get(
@@ -259,8 +233,8 @@ class AmenityAPIController(Controller):
             title="Amenity ID",
             description="Amenity to retrieve",
         ),
-    ) -> schemas.AmenityDBFull:
-        return parse_obj_as(schemas.AmenityDBFull, await r_amenity_repo.get(amenity_id))
+    ) -> AmenityDBFull:
+        return parse_obj_as(AmenityDBFull, await r_amenity_repo.get(amenity_id))
 
     # create amenity
     @post(
@@ -273,11 +247,11 @@ class AmenityAPIController(Controller):
     async def create_amenity(
         self,
         amenity_repo: AmenityRepository,
-        data: schemas.AmenityCreate,
-    ) -> schemas.AmenityDB:
-        obj = await amenity_repo.add(models.Amenity(**data.dict()))
+        data: AmenityCreate,
+    ) -> AmenityDB:
+        obj = await amenity_repo.add(Amenity(**data.dict()))
         await amenity_repo.session.commit()
-        return parse_obj_as(schemas.AmenityDB, obj)
+        return parse_obj_as(AmenityDB, obj)
 
     # update amenity
     @patch(
@@ -290,17 +264,17 @@ class AmenityAPIController(Controller):
     async def update_amenity(
         self,
         amenity_repo: AmenityRepository,
-        data: schemas.AmenityUpdate,
+        data: AmenityUpdate,
         amenity_id: UUID = Parameter(
             title="Amenity ID",
             description="The amenity to update",
         ),
-    ) -> schemas.AmenityDB:
+    ) -> AmenityDB:
         dd = data.dict(exclude_unset=True)
         dd.update({"id": amenity_id})
-        obj = await amenity_repo.update(models.Amenity(**dd))
+        obj = await amenity_repo.update(Amenity(**dd))
         await amenity_repo.session.commit()
-        return parse_obj_as(schemas.AmenityDB, obj)
+        return parse_obj_as(AmenityDB, obj)
 
     # delete amenity
     @delete(
@@ -320,33 +294,3 @@ class AmenityAPIController(Controller):
     ) -> None:
         _ = await r_amenity_repo.delete(amenity_id)
         await r_amenity_repo.session.commit()
-
-
-class ShopWebController(Controller):
-    """Shop webpage rendering"""
-
-    path = "/shops"
-    dependencies = {
-        "shop_repo": Provide(provide_shop_repo),
-        "r_shop_repo": Provide(provide_r_shop_repo),
-    }
-
-    @get(path="", include_in_schema=False)
-    async def shop_list_page(
-        self,
-        r_shop_repo: ShopRepository,
-    ) -> Template:
-        shops = parse_obj_as(list[schemas.ShopDBFull], await r_shop_repo.list())
-        return Template("views/shop-list.html.jinja", context={"shops": shops})
-
-    @get(path="/{shop_id:uuid}", include_in_schema=False)
-    async def shop_details_page(
-        self,
-        r_shop_repo: ShopRepository,
-        shop_id: UUID = Parameter(
-            title="Shop ID",
-            description="The shop to retrieve",
-        ),
-    ) -> Template:
-        shop = parse_obj_as(schemas.ShopDBFull, await r_shop_repo.get(shop_id))
-        return Template("views/shop-details.html.jinja", context={"shop": shop})
