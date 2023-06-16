@@ -19,7 +19,7 @@ class ShopAdminController(Controller):
     dependencies = {"shop_repo": Provide(provide_shop_repo)}
 
     @get(
-        path="",
+        path="/list",
         include_in_schema=False,
     )
     async def admin_shops_table(
@@ -52,7 +52,7 @@ class AmenityAdminController(Controller):
     path = "/admin/amenities"
 
     @get(
-        path="",
+        path="/list",
         include_in_schema=False,
         dependencies={
             "amenity_repo": Provide(provide_amenity_repo),
