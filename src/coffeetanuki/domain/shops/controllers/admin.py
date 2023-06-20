@@ -1,5 +1,7 @@
+from uuid import UUID
 from litestar import Controller, get
 from litestar.di import Provide
+from litestar.params import Parameter
 from litestar.response_containers import Template
 from pydantic import parse_obj_as
 
@@ -9,7 +11,7 @@ from coffeetanuki.domain.shops.repositories import (
     provide_amenity_repo,
     provide_shop_repo,
 )
-from coffeetanuki.domain.shops.schemas import AmenityDB, ShopDB
+from coffeetanuki.domain.shops.schemas import AmenityDB, ShopDB, ShopDBFull
 
 
 class ShopAdminController(Controller):
@@ -44,6 +46,21 @@ class ShopAdminController(Controller):
             "views/admin-table.html.jinja",
             context={"table_name": table_name, "cols": cols, "data": data},
         )
+
+    @get(
+        path="/{shop_id:uuid}/edit",
+        include_in_schema=False,
+    )
+    async def admin_shop_edit(
+        self,
+        shop_repo: ShopRepository,
+        shop_id: UUID = Parameter(
+            title="Shop ID",
+            description="The shop to retrieve",
+        ),
+    ) -> Template:
+        shop = parse_obj_as(ShopDBFull, await shop_repo.get(shop_id))
+        return Template("views/admin-edit-shop.html.jinja", context={"shop": shop})
 
 
 class AmenityAdminController(Controller):
