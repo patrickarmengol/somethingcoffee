@@ -1,0 +1,150 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Create Shop - Admin{% endblock %}
+
+{% block header %}{% include "base/admin-header.html.jinja" %}{% endblock %}
+
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <form id="createShopForm" method="POST">
+        <div class="field">
+          <label class="label" for="name">Name:</label>
+          <div class="control">
+            <input class="input" type="text" id="name" name="name" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="address">Address:</label>
+          <div class="control">
+            <input class="input" type="text" id="address" name="address" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="roaster">Roaster:</label>
+          <div class="control">
+            <input class="input" type="text" id="roaster" name="roaster">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hours">Hours of Operation:</label>
+          <div class="control">
+            <input class="input" type="text" id="hours" name="hours">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="description">Description:</label>
+          <div class="control">
+            <textarea id="description" class="textarea" name="description"></textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="field">
+            <label class="label" for="lat">Latitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lat" name="lat" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="lon">Longitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lon" name="lon" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="amenities">Amenities:</label>
+          <div class="control">
+            {% for amenity in ["oatmilk", "soymilk", "wifi"] %}
+            <label class="checkbox p-2">
+              <input type="checkbox" name="amenities" value="{{ amenity }}">
+              {{ amenity }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <input class="button is-primary" type="submit" value="Save">
+          </div>
+        </div>
+      </form>
+
+      <div id="message"></div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+
+{% block body_scripts %}
+<script>
+  document.getElementById("createShopForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var name = document.getElementById("name").value;
+    var address = document.getElementById("address").value;
+    var roaster = document.getElementById("roaster").value;
+    var hours = document.getElementById("hours").value;
+    var lat = parseFloat(document.getElementById("lat").value);
+    var lon = parseFloat(document.getElementById("lon").value);
+    var amenitiesCheckboxes = document.getElementsByName("amenities");
+
+    var amenities = Array.from(amenitiesCheckboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+
+    var formData = {
+      "name": name,
+      "address": address,
+      "roaster": roaster,
+      "hours": hours,
+      "coordinates": {
+        "lat": lat,
+        "lon": lon
+      },
+      "amenities": amenities
+    };
+
+    fetch("/api/shops", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+      .then(response => {
+        if (response.ok) {
+          showMessage("success", "Shop created successfully.");
+          return response.json();
+        } else {
+          showMessage("error", "Could not create shop.")
+        }
+      })
+      .then(responseData => {
+        console.log("Created shop:", responseData)
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        showMessage("error", "An error occurred while creating the shop.");
+      });
+  });
+
+  // Function to display messages
+  function showMessage(type, message) {
+    var messageDiv = document.getElementById("message");
+    messageDiv.innerHTML = '<div class="' + type + '">' + message + '</div>';
+  }
+
+</script>
+{% endblock %}

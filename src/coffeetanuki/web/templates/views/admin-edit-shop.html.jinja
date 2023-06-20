@@ -130,7 +130,7 @@
       }
     }
     if (!areSetsEqual(originalAmenities, formDataAmenities)) {
-        formData.amenities = Array.from(formDataAmenities)
+      formData.amenities = Array.from(formDataAmenities)
     }
 
     // Send the updated data to the backend if there are changes
@@ -148,7 +148,7 @@
             // reassign originalShop to allow for further changes
             originalShop = data;
             console.log("Updated shop:", data);
-            
+
             showMessage("success", "Shop updated successfully.");
           } else {
             showMessage("error", "Invalid response received from the server.");
@@ -170,18 +170,18 @@
   }
 
   function areSetsEqual(set1, set2) {
-  if (set1.size !== set2.size) {
-    return false;
-  }
-
-  for (const value of set1) {
-    if (!set2.has(value)) {
+    if (set1.size !== set2.size) {
       return false;
     }
-  }
 
-  return true;
-}
+    for (const value of set1) {
+      if (!set2.has(value)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
 </script>
 {% endblock %}

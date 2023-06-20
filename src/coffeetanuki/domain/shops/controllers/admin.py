@@ -48,6 +48,15 @@ class ShopAdminController(Controller):
         )
 
     @get(
+        path="/create",
+        include_in_schema=False,
+    )
+    async def admin_shop_add(
+        self,
+    ) -> Template:
+        return Template("views/admin-create-shop.html.jinja")
+
+    @get(
         path="/{shop_id:uuid}/edit",
         include_in_schema=False,
     )
