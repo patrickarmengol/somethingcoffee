@@ -13,6 +13,7 @@ __all__ = ["Tag"]
 
 
 class Tag(UUIDBase):
+    scope: Mapped[str] = mapped_column(String(), unique=False)
     name: Mapped[str] = mapped_column(String(), unique=True)
 
     shops: Mapped[list[Shop]] = relationship(

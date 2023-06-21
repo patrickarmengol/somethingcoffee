@@ -6,7 +6,8 @@ __all__ = ["TagBase", "TagCreate", "TagUpdate", "TagDB", "TagDBFull"]
 
 
 class TagBase(BaseModel):
-    name: str
+    scope: str  # what kind of tag; e.g. amenity, offering
+    name: str  # what the tag represents; e.g. wifi, oatmilk
 
 
 class TagCreate(TagBase):
@@ -14,6 +15,7 @@ class TagCreate(TagBase):
 
 
 class TagUpdate(BaseModel):
+    scope: str | None
     name: str | None
 
 
