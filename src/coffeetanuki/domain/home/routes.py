@@ -1,5 +1,5 @@
 from litestar import get
-from litestar.response_containers import Template
+from litestar.response import Template
 
 from pydantic import parse_obj_as
 
@@ -13,7 +13,7 @@ from coffeetanuki.domain.shops.utils import geojsonify
     include_in_schema=False,
 )
 async def home_page() -> Template:
-    return Template(name="views/home.html.jinja")
+    return Template(template_name="views/home.html.jinja")
 
 
 @get(
@@ -27,7 +27,7 @@ async def map_page(
     shops = parse_obj_as(list[ShopDB], await shop_repo.list())
     shops_geojson = geojsonify(shops)
     return Template(
-        name="views/map.html.jinja", context={"shops_geojson": shops_geojson}
+        template_name="views/map.html.jinja", context={"shops_geojson": shops_geojson}
     )
 
 
@@ -36,4 +36,4 @@ async def map_page(
     include_in_schema=False,
 )
 async def admin_dash() -> Template:
-    return Template(name="views/admin-dashboard.html.jinja")
+    return Template(template_name="views/admin-dashboard.html.jinja")

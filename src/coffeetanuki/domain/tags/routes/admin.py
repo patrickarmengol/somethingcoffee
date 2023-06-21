@@ -2,7 +2,7 @@ from uuid import UUID
 from litestar import Controller, get
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.response_containers import Template
+from litestar.response import Template
 from pydantic import parse_obj_as
 
 from coffeetanuki.domain.tags.dependencies import TagRepository, provide_tag_repo
@@ -30,6 +30,6 @@ class TagAdminController(Controller):
         cols = ["id", "name"]
 
         return Template(
-            "views/admin-table.html.jinja",
+            template_name="views/admin-table.html.jinja",
             context={"table_name": table_name, "cols": cols, "data": data},
         )

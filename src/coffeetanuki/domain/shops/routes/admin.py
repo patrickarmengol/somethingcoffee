@@ -2,7 +2,7 @@ from uuid import UUID
 from litestar import Controller, get
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.response_containers import Template
+from litestar.response import Template
 from pydantic import parse_obj_as
 
 from coffeetanuki.domain.shops.dependencies import ShopRepository, provide_shop_repo
@@ -38,7 +38,7 @@ class ShopAdminController(Controller):
         ]
 
         return Template(
-            "views/admin-table.html.jinja",
+            template_name="views/admin-table.html.jinja",
             context={"table_name": table_name, "cols": cols, "data": data},
         )
 
@@ -49,7 +49,7 @@ class ShopAdminController(Controller):
     async def admin_shop_add(
         self,
     ) -> Template:
-        return Template("views/admin-create-shop.html.jinja")
+        return Template(template_name="views/admin-create-shop.html.jinja")
 
     @get(
         path="/{shop_id:uuid}/edit",
@@ -64,4 +64,6 @@ class ShopAdminController(Controller):
         ),
     ) -> Template:
         shop = parse_obj_as(ShopDBFull, await shop_repo.get(shop_id))
-        return Template("views/admin-edit-shop.html.jinja", context={"shop": shop})
+        return Template(
+            template_name="views/admin-edit-shop.html.jinja", context={"shop": shop}
+        )

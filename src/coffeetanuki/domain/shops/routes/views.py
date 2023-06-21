@@ -2,7 +2,7 @@ from uuid import UUID
 from litestar import Controller, get
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.response_containers import Template
+from litestar.response import Template
 
 from pydantic import parse_obj_as
 
