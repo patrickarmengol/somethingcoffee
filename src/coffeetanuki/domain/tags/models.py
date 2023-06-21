@@ -1,8 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from litestar.contrib.sqlalchemy.base import UUIDBase
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from coffeetanuki.domain.shops.models import Shop, shop_tag
+from coffeetanuki.domain.shops.models import shop_tag
+
+if TYPE_CHECKING:
+    from coffeetanuki.domain.shops.models import Shop
 
 __all__ = ["Tag"]
 

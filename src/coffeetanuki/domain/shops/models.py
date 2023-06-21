@@ -1,10 +1,12 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 from geoalchemy2 import Geography
 from litestar.contrib.sqlalchemy.base import UUIDBase
 from sqlalchemy import Column, ForeignKey, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from coffeetanuki.domain.tags.models import Tag
+if TYPE_CHECKING:
+    from coffeetanuki.domain.tags.models import Tag
 
 
 __all__ = ["Shop", "shop_tag"]

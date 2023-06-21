@@ -1,9 +1,8 @@
 from __future__ import annotations
+from typing import TYPE_CHECKING
 from geoalchemy2 import WKBElement, shape
 from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
-
-from coffeetanuki.domain.tags.schemas import TagDB
 
 
 __all__ = [
@@ -63,6 +62,9 @@ class ShopDB(ShopBase):
 
     class Config:
         orm_mode = True
+
+
+from coffeetanuki.domain.tags.schemas import TagDB  # noqa: E402
 
 
 class ShopDBFull(ShopDB):

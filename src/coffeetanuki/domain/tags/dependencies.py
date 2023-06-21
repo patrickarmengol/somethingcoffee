@@ -2,7 +2,7 @@ from litestar.contrib.sqlalchemy.repository import SQLAlchemyAsyncRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from coffeetanuki.domain.shops.models import Tag
+from coffeetanuki.domain.tags.models import Tag
 
 __all__ = ["TagRepository", "provide_tag_repo", "provide_r_tag_repo"]
 

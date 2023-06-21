@@ -1,6 +1,7 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from pydantic import BaseModel, UUID4
 
-from coffeetanuki.domain.shops.schemas import ShopDB
 
 __all__ = ["TagBase", "TagCreate", "TagUpdate", "TagDB", "TagDBFull"]
 
@@ -22,6 +23,9 @@ class TagDB(TagBase):
 
     class Config:
         orm_mode = True
+
+
+from coffeetanuki.domain.shops.schemas import ShopDB  # noqa: E402
 
 
 class TagDBFull(TagDB):
