@@ -1,6 +1,6 @@
 from __future__ import annotations
 from geoalchemy2 import WKBElement, shape
-from pydantic import BaseModel, UUID4, validator
+from pydantic import BaseModel, UUID4, validator, HttpUrl
 from shapely.geometry import Point
 
 
@@ -22,10 +22,14 @@ class Coordinates(BaseModel):
 
 class ShopBase(BaseModel):
     name: str
+    country: str
+    city: str
     address: str
     coordinates: Coordinates
     roaster: str | None
     hours_of_operation: str | None
+    website: HttpUrl | None
+    gmaps_link: HttpUrl | None
     description: str | None
 
 
@@ -35,10 +39,14 @@ class ShopCreate(ShopBase):
 
 class ShopUpdate(BaseModel):
     name: str | None
+    country: str | None
+    city: str | None
     address: str | None
     coordinates: Coordinates | None
     roaster: str | None
     hours_of_operation: str | None
+    website: HttpUrl | None
+    gmaps_link: HttpUrl | None
     description: str | None
     tags: list[str] | None
 

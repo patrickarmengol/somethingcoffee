@@ -22,6 +22,8 @@ shop_tag = Table(
 
 class Shop(UUIDBase):
     name: Mapped[str] = mapped_column(String(), unique=True)
+    country: Mapped[str]
+    city: Mapped[str]
     address: Mapped[str]
     coordinates: Mapped[Geography] = mapped_column(
         Geography(
@@ -33,6 +35,8 @@ class Shop(UUIDBase):
     )
     roaster: Mapped[str | None]
     hours_of_operation: Mapped[str | None]
+    website: Mapped[str | None]
+    gmaps_link: Mapped[str | None]
     description: Mapped[str | None]
 
     tags: Mapped[list[Tag]] = relationship(
