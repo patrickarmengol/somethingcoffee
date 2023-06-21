@@ -3,6 +3,8 @@ from geoalchemy2 import WKBElement, shape
 from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
 
+from coffeetanuki.domain.tags.schemas import TagDB
+
 
 __all__ = [
     "Coordinates",
@@ -10,10 +12,7 @@ __all__ = [
     "ShopCreate",
     "ShopUpdate",
     "ShopDB",
-    "AmenityBase",
-    "AmenityCreate",
-    "AmenityUpdate",
-    "AmenityDB",
+    "ShopDBFull",
 ]
 
 
@@ -21,25 +20,6 @@ class Coordinates(BaseModel):
     # TODO: validate
     lon: float
     lat: float
-
-
-class AmenityBase(BaseModel):
-    name: str
-
-
-class AmenityCreate(AmenityBase):
-    pass
-
-
-class AmenityUpdate(BaseModel):
-    name: str | None
-
-
-class AmenityDB(AmenityBase):
-    id: UUID4
-
-    class Config:
-        orm_mode = True
 
 
 class ShopBase(BaseModel):
@@ -52,7 +32,7 @@ class ShopBase(BaseModel):
 
 
 class ShopCreate(ShopBase):
-    amenities: list[str]
+    tags: list[str]
 
 
 class ShopUpdate(BaseModel):
@@ -62,7 +42,7 @@ class ShopUpdate(BaseModel):
     roaster: str | None
     hours_of_operation: str | None
     description: str | None
-    amenities: list[str] | None
+    tags: list[str] | None
 
 
 class ShopDB(ShopBase):
@@ -85,9 +65,5 @@ class ShopDB(ShopBase):
         orm_mode = True
 
 
-class AmenityDBFull(AmenityDB):
-    shops: list[ShopDB]
-
-
 class ShopDBFull(ShopDB):
-    amenities: list[AmenityDB]
+    amenities: list[TagDB]

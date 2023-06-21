@@ -4,26 +4,18 @@ from litestar.contrib.sqlalchemy.base import UUIDBase
 from sqlalchemy import Column, ForeignKey, String, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from coffeetanuki.domain.tags.models import Tag
 
-__all__ = ["Shop", "Amenity", "shop_amenity"]
+
+__all__ = ["Shop", "shop_tag"]
 
 
-shop_amenity = Table(
-    "shop_amenity",
+shop_tag = Table(
+    "shop_tag",
     UUIDBase.metadata,
     Column("shop_id", ForeignKey("shop.id")),
-    Column("amenity_id", ForeignKey("amenity.id")),
+    Column("tag_id", ForeignKey("tag.id")),
 )
-
-
-class Amenity(UUIDBase):
-    name: Mapped[str] = mapped_column(String(), unique=True)
-
-    shops: Mapped[list[Shop]] = relationship(
-        secondary=shop_amenity,
-        back_populates="amenities",
-        lazy="selectin",
-    )
 
 
 class Shop(UUIDBase):
@@ -41,8 +33,8 @@ class Shop(UUIDBase):
     hours_of_operation: Mapped[str | None]
     description: Mapped[str | None]
 
-    amenities: Mapped[list[Amenity]] = relationship(
-        secondary=shop_amenity,
+    tags: Mapped[list[Tag]] = relationship(
+        secondary=shop_tag,
         back_populates="shops",
         lazy="selectin",
     )
