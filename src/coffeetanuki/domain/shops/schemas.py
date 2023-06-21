@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 from geoalchemy2 import WKBElement, shape
 from pydantic import BaseModel, UUID4, validator
 from shapely.geometry import Point
