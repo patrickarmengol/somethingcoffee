@@ -8,7 +8,7 @@ from litestar.contrib.repository.filters import CollectionFilter
 
 from pydantic import parse_obj_as
 
-from coffeetanuki.domain.shops.repositories import (
+from coffeetanuki.domain.shops.dependencies import (
     ShopRepository,
     AmenityRepository,
     provide_shop_repo,

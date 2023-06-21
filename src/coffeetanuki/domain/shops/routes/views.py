@@ -6,7 +6,7 @@ from litestar.response_containers import Template
 
 from pydantic import parse_obj_as
 
-from coffeetanuki.domain.shops.repositories import (
+from coffeetanuki.domain.shops.dependencies import (
     ShopRepository,
     provide_shop_repo,
     provide_r_shop_repo,

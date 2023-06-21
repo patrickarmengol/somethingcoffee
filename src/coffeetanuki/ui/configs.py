@@ -5,16 +5,16 @@ from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.static_files import StaticFilesConfig
 from litestar.template.config import TemplateConfig
 
-from coffeetanuki.utils import module_to_os_path
+from coffeetanuki.core.utils import module_to_os_path
 
 __all__ = ["template_config", "static_files_config"]
 
 DEFAULT_MODULE_NAME = "coffeetanuki"
 BASE_DIR: Final = module_to_os_path(DEFAULT_MODULE_NAME)
-TEMPLATES_DIR = Path(BASE_DIR / "web" / "templates")
-SCRIPTS_DIR = Path(BASE_DIR / "web" / "static" / "scripts")
-STYLES_DIR = Path(BASE_DIR / "web" / "static" / "styles")
-IMAGES_DIR = Path(BASE_DIR / "web" / "static" / "images")
+TEMPLATES_DIR = Path(BASE_DIR / "ui" / "templates")
+SCRIPTS_DIR = Path(BASE_DIR / "ui" / "static" / "scripts")
+STYLES_DIR = Path(BASE_DIR / "ui" / "static" / "styles")
+IMAGES_DIR = Path(BASE_DIR / "ui" / "static" / "images")
 
 
 template_config = TemplateConfig(

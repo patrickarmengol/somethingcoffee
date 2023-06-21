@@ -5,7 +5,7 @@ from litestar.params import Parameter
 from litestar.response_containers import Template
 from pydantic import parse_obj_as
 
-from coffeetanuki.domain.shops.repositories import (
+from coffeetanuki.domain.shops.dependencies import (
     AmenityRepository,
     ShopRepository,
     provide_amenity_repo,

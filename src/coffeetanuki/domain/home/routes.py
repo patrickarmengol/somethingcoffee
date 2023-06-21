@@ -1,10 +1,10 @@
-from litestar import Controller, get
+from litestar import get
 from litestar.response_containers import Template
 
 from pydantic import parse_obj_as
 
 from coffeetanuki.domain.shops.schemas import ShopDB
-from coffeetanuki.domain.shops.repositories import ShopRepository, provide_shop_repo
+from coffeetanuki.domain.shops.dependencies import ShopRepository, provide_shop_repo
 from coffeetanuki.domain.shops.utils import geojsonify
 
 

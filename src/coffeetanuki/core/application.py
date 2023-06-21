@@ -3,8 +3,8 @@ from litestar import Litestar
 from litestar.serialization import DEFAULT_TYPE_ENCODERS
 
 from coffeetanuki import domain
-from coffeetanuki.database import sqlalchemy_plugin
-from coffeetanuki.web.configs import static_files_config, template_config
+from coffeetanuki.core.database import sqlalchemy_plugin
+from coffeetanuki.ui.configs import static_files_config, template_config
 
 app = Litestar(
     route_handlers=[*domain.routes],

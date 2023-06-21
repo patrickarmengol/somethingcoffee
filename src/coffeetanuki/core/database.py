@@ -4,7 +4,7 @@ from litestar.contrib.sqlalchemy.plugins.init import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from coffeetanuki.settings import db
+from coffeetanuki.core.settings import db
 
 # create engine and session_maker manually to allow for expire_on_commit=False
 engine = create_async_engine(db.URL)

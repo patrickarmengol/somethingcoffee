@@ -1,3 +1,3 @@
-from coffeetanuki.domain.shops import controllers, models, schemas
+from coffeetanuki.domain.shops import routes, models, schemas, dependencies
 
-__all__ = ["controllers", "models", "schemas"]
+__all__ = ["routes", "models", "schemas", "dependencies"]

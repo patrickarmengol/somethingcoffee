@@ -1,15 +1,15 @@
 from litestar.types import ControllerRouterHandler
-from coffeetanuki.domain import shops, web
+from coffeetanuki.domain import shops, home
 
 __all__ = ["routes", "shops"]
 
 routes: list[ControllerRouterHandler] = [
-    shops.controllers.api.ShopAPIController,
-    shops.controllers.api.AmenityAPIController,
-    shops.controllers.web.ShopWebController,
-    shops.controllers.admin.ShopAdminController,
-    shops.controllers.admin.AmenityAdminController,
-    web.handlers.home_page,
-    web.handlers.map_page,
-    web.handlers.admin_dash,
+    shops.routes.api.ShopAPIController,
+    shops.routes.api.AmenityAPIController,
+    shops.routes.views.ShopWebController,
+    shops.routes.admin.ShopAdminController,
+    shops.routes.admin.AmenityAdminController,
+    home.routes.home_page,
+    home.routes.map_page,
+    home.routes.admin_dash,
 ]
