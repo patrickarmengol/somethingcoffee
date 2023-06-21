@@ -68,4 +68,4 @@ from coffeetanuki.domain.tags.schemas import TagDB  # noqa: E402
 
 
 class ShopDBFull(ShopDB):
-    amenities: list[TagDB]
+    tags: list[TagDB]
