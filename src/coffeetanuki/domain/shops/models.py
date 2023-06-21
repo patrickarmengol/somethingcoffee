@@ -15,8 +15,8 @@ __all__ = ["Shop", "shop_tag"]
 shop_tag = Table(
     "shop_tag",
     UUIDBase.metadata,
-    Column("shop_id", ForeignKey("shop.id")),
-    Column("tag_id", ForeignKey("tag.id")),
+    Column("shop_id", ForeignKey("shop.id"), primary_key=True),
+    Column("tag_id", ForeignKey("tag.id"), primary_key=True),
 )
 
 
