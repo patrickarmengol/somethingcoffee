@@ -23,6 +23,22 @@
           <div class="notification p-5">
             <div class="columns">
               <div class="column is-half">
+                <p class="has-text-right-desktop"><strong>country:</strong></p>
+              </div>
+              <div class="column is-half">
+                <p class="has-text-left-desktop">{{ shop.country }}</p>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-half">
+                <p class="has-text-right-desktop"><strong>city:</strong></p>
+              </div>
+              <div class="column is-half">
+                <p class="has-text-left-desktop">{{ shop.city }}</p>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-half">
                 <p class="has-text-right-desktop"><strong>address:</strong></p>
               </div>
               <div class="column is-half">
@@ -45,6 +61,22 @@
                 <p class="has-text-left-desktop">{{ shop.hours_of_operation or "unknown" }}</p>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-half">
+                <p class="has-text-right-desktop"><strong>website:</strong></p>
+              </div>
+              <div class="column is-half">
+                <p class="has-text-left-desktop">{{ shop.website or "unknown" }}</p>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-half">
+                <p class="has-text-right-desktop"><strong>gmaps link:</strong></p>
+              </div>
+              <div class="column is-half">
+                <p class="has-text-left-desktop">{{ shop.gmaps_link or "unknown" }}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div class="column is-6">
@@ -52,6 +84,14 @@
           <div class="notification">
             <p>{{ shop.description or "no description available"}}</p>
           </div>
+        </div>
+      </div>
+      <div class="has-text-centered">
+        <h2 class="subtitle">tags</h2>
+        <div>
+          {% for tag in shop.tags %}
+          <span class="tag">{{ tag.scope + "::" + tag.name }}</span>
+          {% endfor %}
         </div>
       </div>
     </div>
