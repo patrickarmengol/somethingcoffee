@@ -130,6 +130,7 @@ class ShopAPIController(Controller):
             dd["coordinates"] = f"Point({data.coordinates.lon} {data.coordinates.lat})"
         if "tag_names" in dd and data.tag_names:
             dd["tags"] = await tag_repo.list(CollectionFilter("name", data.tag_names))
+            del dd["tag_names"]
         obj = await r_shop_repo.update(Shop(**dd))
         await r_shop_repo.session.commit()
         return parse_obj_as(ShopDBFull, obj)
