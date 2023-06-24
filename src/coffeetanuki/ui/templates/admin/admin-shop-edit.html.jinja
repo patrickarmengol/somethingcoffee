@@ -1,0 +1,243 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Edit Shop: {{ shop.id }} - Admin{% endblock %}
+
+{% block header %}{% include "admin/admin-header.html.jinja" %}{% endblock %}
+
+{% block head_scripts %}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Edit Shop: <a href="/shops/{{ shop.id }}">{{shop.id}}</a> </h1>
+      <form id="editShopForm" method="PATCH">
+        <div class="field">
+          <label class="label" for="name">Name:</label>
+          <div class="control">
+            <input class="input" type="text" id="name" name="name" value="{{ shop.name }}" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="country">Country:</label>
+          <div class="control">
+            <input class="input" type="text" id="country" name="country" value="{{ shop.country }}" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ciy">City:</label>
+          <div class="control">
+            <input class="input" type="text" id="city" name="city" value="{{ shop.city }}" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="address">Address:</label>
+          <div class="control">
+            <input class="input" type="text" id="address" name="address" value="{{ shop.address }}" required>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="field">
+            <label class="label" for="lon">Longitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lon" name="lon" value="{{ shop.coordinates.lon }}"
+                required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="lat">Latitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lat" name="lat" value="{{ shop.coordinates.lat }}"
+                required>
+            </div>
+          </div>
+        </div>
+
+        <div class=" field">
+          <label class="label" for="roaster">Roaster:</label>
+          <div class="control">
+            <input class="input" type="text" id="roaster" name="roaster" value="{{ shop.roaster or '' }}">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hours">Hours of Operation:</label>
+          <div class="control">
+            <input class="input" type="text" id="hours" value="{{ shop.hours_of_operation or '' }}">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="website">Website:</label>
+          <div class="control">
+            <input class="input" type="text" id="website" name="website" value="{{ shop.website or '' }}">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="gmaps">Google Maps Link:</label>
+          <div class="control">
+            <input class="input" type="text" id="gmaps" name="gmaps" value="{{ shop.gmaps_link or '' }}">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="description">Description:</label>
+          <div class="control">
+            <textarea id="description" class="textarea" name="description">{{ shop.description or '' }}</textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="tags">Tags:</label>
+          <div class="control">
+            {% for tag in ["offering::espresso", "offering::cappuccino", "amenity::wifi"] %}
+            <label class="checkbox p-2">
+              <input type="checkbox" name="tags" value="{{ tag.split('::')[1] }}" {% if tag.split('::')[1] in
+                shop.tags|map(attribute='name' )|list %}checked{% endif %}>
+              {{ tag }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <input class="button is-primary" type="submit" value="Save">
+          </div>
+        </div>
+      </form>
+
+      <div id="message-wrapper"></div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block body_scripts %}
+<script>
+  var originalShop = JSON.parse('{{shop.json() | safe}}');
+
+  document.getElementById("editShopForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // prevent the default form submission
+
+    var formData = {};
+    var name = document.getElementById("name").value;
+    var country = document.getElementById("country").value;
+    var city = document.getElementById("city").value;
+    var address = document.getElementById("address").value;
+    var lon = parseFloat(document.getElementById("lon").value);
+    var lat = parseFloat(document.getElementById("lat").value);
+    var roaster = document.getElementById("roaster").value || null;
+    var hours = document.getElementById("hours").value || null;
+    var website = document.getElementById("website").value || null;
+    var gmaps = document.getElementById("gmaps").value || null;
+    var description = document.getElementById("description").value || null;
+    var tagsCheckboxes = document.getElementsByName("tags");
+
+    if (name !== originalShop.name) {
+      formData.name = name;
+    }
+
+    if (country !== originalShop.country) {
+      formData.country = country;
+    }
+
+    if (city !== originalShop.city) {
+      formData.city = city;
+    }
+
+    if (address !== originalShop.address) {
+      formData.address = address;
+    }
+
+    if (lon !== originalShop.coordinates.lon || lat !== originalShop.coordinates.lat) {
+      formData.coordinates = {
+        lon: lon,
+        lat: lat
+      };
+    }
+
+    if (roaster !== originalShop.roaster) {
+      formData.roaster = roaster;
+    }
+
+    if (hours !== originalShop.hours_of_operation) {
+      formData.hours_of_operation = hours;
+    }
+
+    if (website !== originalShop.website) {
+      formData.website = website;
+    }
+
+    if (gmaps !== originalShop.gmaps_link) {
+      formData.gmaps_link = gmaps;
+    }
+
+    if (description !== originalShop.description) {
+      formData.description = description;
+    }
+
+    var originalTags = new Set(originalShop.tags.map(amenity => amenity.name));
+    var tagNames = new Set(Array.from(tagsCheckboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value));
+    if (!areSetsEqual(originalTags, tagNames)) {
+      formData.tag_names = Array.from(tagNames)
+    }
+
+    // send the updated data to the backend if there are changes
+    if (Object.keys(formData).length > 0) {
+      $.ajax({
+        url: '/api/shops/{{shop.id}}',
+        type: 'PATCH',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+          // request completed successfully
+          showMessage("is-success", "Shop updated successfully.");
+          console.log(response);
+          originalShop = response;
+
+        },
+        error: function (xhr, status, error) {
+          // error occurred during the request
+          showMessage("is-danger", "An error occurred while updating the shop.");
+          console.error(error);
+        }
+      });
+    } else {
+      showMessage("is-light", "No changes made.");
+    }
+
+    // display messages in the message div
+    function showMessage(type, message) {
+      var messageDiv = document.getElementById("message-wrapper");
+      messageDiv.innerHTML = '<div class="message ' + type + '"><div class="message-body">' + message + '</div></div>';
+    }
+
+    // compare sets for changed tags
+    function areSetsEqual(set1, set2) {
+      if (set1.size !== set2.size) {
+        return false;
+      }
+
+      for (const value of set1) {
+        if (!set2.has(value)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+  });
+</script>
+{% endblock %}

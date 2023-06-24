@@ -1,0 +1,183 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Create Shop - Admin{% endblock %}
+
+{% block header %}{% include "admin/admin-header.html.jinja" %}{% endblock %}
+
+{% block head_scripts %}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <form id="createShopForm" method="POST">
+        <div class="field">
+          <label class="label" for="name">Name:</label>
+          <div class="control">
+            <input class="input" type="text" id="name" name="name" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="country">Country:</label>
+          <div class="control">
+            <input class="input" type="text" id="country" name="country" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ciy">City:</label>
+          <div class="control">
+            <input class="input" type="text" id="city" name="city" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="address">Address:</label>
+          <div class="control">
+            <input class="input" type="text" id="address" name="address" required>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="field">
+            <label class="label" for="lon">Longitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lon" name="lon" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="lat">Latitude:</label>
+            <div class="control">
+              <input class="input" type="number" step="any" id="lat" name="lat" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="roaster">Roaster:</label>
+          <div class="control">
+            <input class="input" type="text" id="roaster" name="roaster">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hours">Hours of Operation:</label>
+          <div class="control">
+            <input class="input" type="text" id="hours" name="hours">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="website">Website:</label>
+          <div class="control">
+            <input class="input" type="text" id="website" name="website">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="gmaps">Google Maps Link:</label>
+          <div class="control">
+            <input class="input" type="text" id="gmaps" name="gmaps">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="description">Description:</label>
+          <div class="control">
+            <textarea id="description" class="textarea" name="description"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="tags">Tags:</label>
+          <div class="control">
+            {% for tag in ["offering::espresso", "offering::cappuccino", "amenity::wifi"] %}
+            <label class="checkbox p-2">
+              <input type="checkbox" name="tags" value="{{ tag.split('::')[1] }}">
+              {{ tag }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <input class="button is-primary" type="submit" value="Save">
+          </div>
+        </div>
+      </form>
+
+      <div id="message-wrapper"></div>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+
+{% block body_scripts %}
+<script>
+  document.getElementById("createShopForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var name = document.getElementById("name").value;
+    var country = document.getElementById("country").value;
+    var city = document.getElementById("city").value;
+    var address = document.getElementById("address").value;
+    var lon = parseFloat(document.getElementById("lon").value);
+    var lat = parseFloat(document.getElementById("lat").value);
+    var roaster = document.getElementById("roaster").value || null;
+    var hours = document.getElementById("hours").value || null;
+    var website = document.getElementById("website").value || null;
+    var gmaps = document.getElementById("gmaps").value || null;
+    var description = document.getElementById("description").value || null;
+    var tagsCheckboxes = document.getElementsByName("tags");
+    var tagNames = Array.from(tagsCheckboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value);
+
+    var formData = {
+      "name": name,
+      "country": country,
+      "city": city,
+      "address": address,
+      "coordinates": {
+        "lon": lon,
+        "lat": lat
+      },
+      "roaster": roaster,
+      "hours": hours,
+      "website": website,
+      "gmaps_link": gmaps,
+      "tag_names": tagNames
+    };
+
+    $.ajax({
+      url: '/api/shops',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(formData),
+      success: function (response) {
+        // request completed successfully
+        showMessage("is-success", 'Shop created successfully. <a href="/shops/' + response.id + '">' + response.id + '</a>');
+        console.log(response);
+      },
+      error: function (xhr, status, error) {
+        // error occurred during the request
+        showMessage("is-danger", "An error occurred while creating the shop.");
+        console.error(error);
+      }
+    });
+
+    // display messages in the message div
+    function showMessage(type, message) {
+      var messageDiv = document.getElementById("message-wrapper");
+      messageDiv.innerHTML = '<div class="message ' + type + '"><div class="message-body">' + message + '</div></div>';
+    }
+  });
+</script>
+{% endblock %}

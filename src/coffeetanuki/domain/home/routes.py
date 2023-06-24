@@ -36,4 +36,4 @@ async def map_page(
     include_in_schema=False,
 )
 async def admin_dash() -> Template:
-    return Template(template_name="views/admin-dashboard.html.jinja")
+    return Template(template_name="admin/admin-dashboard.html.jinja")

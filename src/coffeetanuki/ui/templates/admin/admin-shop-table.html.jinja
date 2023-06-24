@@ -1,8 +1,8 @@
 {% extends "base/base.html.jinja" %}
 
-{% block title %}{{ table_name|capitalize }} Table - Admin{% endblock %}
+{% block title %}Shop Table - Admin{% endblock %}
 
-{% block header %}{% include "base/admin-header.html.jinja" %}{% endblock %}
+{% block header %}{% include "admin/admin-header.html.jinja" %}{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bulma.min.css" />
@@ -10,7 +10,8 @@
 
 {% block head_scripts %}
 <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bulma.min.js"></script>
 {% endblock %}
@@ -20,48 +21,20 @@
   <section class="section">
     <div class="container">
       <h1 class="is-size-1 title">
-        {{ table_name|capitalize }}
+        Shops
       </h1>
       <table id="table" class="table is-striped is-hoverable is-fullwidth">
         <thead>
           <tr>
-            {% for col in cols %}
-            <th>{{ col }}</th>
-            {% endfor %}
-            <th class="no-sort">actions</th>
+            <th>id</th>
+            <th>name</th>
+            <th>country</th>
+            <th>city</th>
+            <th>lon</th>
+            <th>lat</th>
+            <th class="has-text-centered">actions</th>
           </tr>
         </thead>
-        <tbody>
-          {% for row in data %}
-          <tr>
-            {% for col in cols %}
-            <td class="is-nowrap">
-              {% if col in ["description"] and row[col] %}
-              {{ "..." }}
-              {% elif "." in col %}
-              {% set a, n = col.split(".") %}
-              {{ row[a][n] }}
-              {% else %}
-              {{ row[col] }}
-              {% endif %}
-            </td>
-            {% endfor %}
-            <td>
-              <div class="buttons is-flex is-flex-wrap-nowrap is-right">
-                <a href="/{{ table_name }}/{{row['id']}}" class="button is-link is-small">
-                  <span class="icon iconify" data-icon="mdi-eye"></span>
-                </a>
-                <a href="/admin/{{table_name}}/{{row['id']}}/edit" class="button is-primary is-small">
-                  <span class="icon iconify" data-icon="mdi-pencil"></span>
-                </a>
-                <a href="#" data-item-id="{{row['id']}}" class="button is-danger is-small delete-button">
-                  <span class="icon iconify" data-icon="mdi-delete"></span>
-                </a>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
       </table>
     </div>
   </section>
@@ -71,15 +44,42 @@
 {% block body_scripts %}
 <script>
   $(document).ready(function () {
+    var shopData = JSON.parse('{{shop_data | safe}}');
     var dataTable = $('table').DataTable({
       searching: true,     // Enable search functionality
       ordering: true,      // Enable sorting by header
       lengthChange: true,  // Enable max rows per page selector
       paging: true,        // Enable pagination
-      autoWidth: false,
-      columnDefs: [
-        {targets: 'no-sort', orderable: false}  // Disable sorting for columns with no-sort class
-      ]
+      data: shopData,
+      columns: [
+        {data: 'id'},
+        {data: 'name'},
+        {data: 'country'},
+        {data: 'city'},
+        {data: 'coordinates.lon'},
+        {data: 'coordinates.lat'},
+        {
+          data: null,
+          orderable: false,
+          render: function (data, type, row, meta) {
+            var actionButtonTemplate = `
+              <div class="buttons is-flex is-flex-wrap-nowrap is-centered">
+                <a href="/shops/${row.id}" class="button is-link is-small">
+                  <span class="icon iconify" data-icon="mdi-eye"></span>
+                </a>
+                <a href="/admin/shops/${row.id}/edit" class="button is-primary is-small">
+                  <span class="icon iconify" data-icon="mdi-pencil"></span>
+                </a>
+                <a href="#" data-item-id="${row.id}" class="button is-danger is-small delete-button">
+                  <span class="icon iconify" data-icon="mdi-delete"></span>
+                </a>
+              </div>
+            `;
+
+            return actionButtonTemplate;
+          }
+        },
+      ],
     });
     $('.delete-button').on('click', function (e) {
       e.preventDefault();

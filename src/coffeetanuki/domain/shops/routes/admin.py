@@ -4,6 +4,8 @@ from litestar.di import Provide
 from litestar.params import Parameter
 from litestar.response import Template
 from pydantic import parse_obj_as
+from pydantic.json import pydantic_encoder
+import json
 
 from coffeetanuki.domain.shops.dependencies import ShopRepository, provide_shop_repo
 from coffeetanuki.domain.shops.schemas import ShopDB, ShopDBFull
@@ -23,23 +25,11 @@ class ShopAdminController(Controller):
         self,
         shop_repo: ShopRepository,
     ) -> Template:
-        table_name = "shops"
-        # should data be list of dicts instead of pydantic models?
-        data = parse_obj_as(list[ShopDB], await shop_repo.list())
-        cols = [
-            "id",
-            "name",
-            "address",
-            "coordinates.lon",
-            "coordinates.lat",
-            "roaster",
-            "hours_of_operation",
-            "description",
-        ]
-
+        shops = parse_obj_as(list[ShopDB], await shop_repo.list())
+        shop_data = json.dumps(shops, default=pydantic_encoder)
         return Template(
-            template_name="views/admin-table.html.jinja",
-            context={"table_name": table_name, "cols": cols, "data": data},
+            template_name="admin/admin-shop-table.html.jinja",
+            context={"shop_data": shop_data},
         )
 
     @get(
@@ -49,7 +39,7 @@ class ShopAdminController(Controller):
     async def admin_shop_add(
         self,
     ) -> Template:
-        return Template(template_name="views/admin-create-shop.html.jinja")
+        return Template(template_name="admin/admin-shop-create.html.jinja")
 
     @get(
         path="/{shop_id:uuid}/edit",
@@ -65,5 +55,5 @@ class ShopAdminController(Controller):
     ) -> Template:
         shop = parse_obj_as(ShopDBFull, await shop_repo.get(shop_id))
         return Template(
-            template_name="views/admin-edit-shop.html.jinja", context={"shop": shop}
+            template_name="admin/admin-shop-edit.html.jinja", context={"shop": shop}
         )
