@@ -96,11 +96,12 @@ class ShopAPIController(Controller):
         dd.update(
             {
                 "coordinates": f"Point({data.coordinates.lon} {data.coordinates.lat})",
-                "tags": await tag_repo.list(CollectionFilter("name", data.tags))
-                if data.tags
+                "tags": await tag_repo.list(CollectionFilter("name", data.tag_names))
+                if data.tag_names
                 else [],
             }
         )
+        del dd["tag_names"]
         obj = await r_shop_repo.add(Shop(**dd))
         await r_shop_repo.session.commit()
         return parse_obj_as(ShopDBFull, obj)
@@ -127,8 +128,8 @@ class ShopAPIController(Controller):
         dd.update({"id": shop_id})
         if "coordinates" in dd and data.coordinates:
             dd["coordinates"] = f"Point({data.coordinates.lon} {data.coordinates.lat})"
-        if "tags" in dd and data.tags:
-            dd["tags"] = await tag_repo.list(CollectionFilter("name", data.tags))
+        if "tag_names" in dd and data.tag_names:
+            dd["tags"] = await tag_repo.list(CollectionFilter("name", data.tag_names))
         obj = await r_shop_repo.update(Shop(**dd))
         await r_shop_repo.session.commit()
         return parse_obj_as(ShopDBFull, obj)

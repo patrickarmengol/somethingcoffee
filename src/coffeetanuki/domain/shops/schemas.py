@@ -34,7 +34,7 @@ class ShopBase(BaseModel):
 
 
 class ShopCreate(ShopBase):
-    tags: list[str]
+    tag_names: list[str]  # perhaps allow for lookup by id or scope::name
 
 
 class ShopUpdate(BaseModel):
@@ -48,7 +48,7 @@ class ShopUpdate(BaseModel):
     website: HttpUrl | None
     gmaps_link: HttpUrl | None
     description: str | None
-    tags: list[str] | None
+    tag_names: list[str] | None
 
 
 class ShopDB(ShopBase):
