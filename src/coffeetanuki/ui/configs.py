@@ -4,6 +4,7 @@ from typing import Final
 from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.static_files import StaticFilesConfig
 from litestar.template.config import TemplateConfig
+from pydantic.json import pydantic_encoder
 
 from coffeetanuki.core.utils import module_to_os_path
 
@@ -21,6 +22,10 @@ template_config = TemplateConfig(
     directory=TEMPLATES_DIR,
     engine=JinjaTemplateEngine,
 )
+
+template_config.engine_instance.engine.policies["json.dumps_kwargs"] = {
+    "default": pydantic_encoder
+}
 
 
 static_files_config = [

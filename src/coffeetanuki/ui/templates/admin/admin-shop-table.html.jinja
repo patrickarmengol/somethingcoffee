@@ -44,7 +44,7 @@
 {% block body_scripts %}
 <script>
   $(document).ready(function () {
-    var shopData = JSON.parse('{{shop_data | safe}}');
+    var shopData = JSON.parse('{{shops | tojson | safe}}');
     var dataTable = $('table').DataTable({
       searching: true,     // Enable search functionality
       ordering: true,      // Enable sorting by header
