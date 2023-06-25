@@ -26,7 +26,7 @@
 {% block body_scripts %}
 <script src="{{ url_for_static_asset('scripts', 'map.js') }}"></script>
 <script>
-  L.geoJSON({{shops_geojson | safe}})
+  L.geoJSON({{shops_geojson | tojson | safe}})
     .bindPopup((layer) => '<a href="/shops/' + layer.feature.properties.id + '">' + layer.feature.properties.name + '</a>')
     .addTo(map);
   map.setView([0, 0], 5)

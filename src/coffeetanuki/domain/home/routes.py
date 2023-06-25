@@ -1,8 +1,6 @@
 from litestar import get
 from litestar.response import Template
-import json
 from pydantic import parse_obj_as
-from pydantic.json import pydantic_encoder
 
 from coffeetanuki.domain.shops.schemas import ShopDB
 from coffeetanuki.domain.shops.dependencies import ShopRepository, provide_shop_repo
@@ -26,7 +24,7 @@ async def map_page(
     shop_repo: ShopRepository,
 ) -> Template:
     shops = parse_obj_as(list[ShopDB], await shop_repo.list())
-    shops_geojson = json.dumps(geojsonify(shops), default=pydantic_encoder)
+    shops_geojson = geojsonify(shops)
     return Template(
         template_name="views/map.html.jinja", context={"shops_geojson": shops_geojson}
     )
