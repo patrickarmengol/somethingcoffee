@@ -1,6 +1,6 @@
-from pathlib import Path
 import pkgutil
 from importlib.machinery import SourceFileLoader
+from pathlib import Path
 
 
 def module_to_os_path(dotted_path: str = "app") -> Path:
