@@ -1,6 +1,4 @@
-from asyncpg.pgproto import pgproto  # type: ignore
 from litestar import Litestar
-from litestar.serialization import DEFAULT_TYPE_ENCODERS
 
 from coffeetanuki import domain
 from coffeetanuki.core.database import sqlalchemy_plugin
@@ -11,6 +9,5 @@ app = Litestar(
     plugins=[sqlalchemy_plugin],
     template_config=template_config,
     static_files_config=static_files_config,
-    type_encoders={**DEFAULT_TYPE_ENCODERS, pgproto.UUID: str},  # postgres UUID support
     debug=True,
 )
