@@ -2,8 +2,7 @@ from uuid import UUID
 from litestar import Controller, get
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.response import Redirect, Template
-from litestar.status_codes import HTTP_303_SEE_OTHER
+from litestar.response import Template
 
 from pydantic import parse_obj_as
 
@@ -24,11 +23,7 @@ class ShopWebController(Controller):
         "r_shop_repo": Provide(provide_r_shop_repo),
     }
 
-    @get(path="", include_in_schema=False, status_code=HTTP_303_SEE_OTHER)
-    async def shops_index_redirect(self) -> Redirect:
-        return Redirect(path="/shops/list")
-
-    @get(path="/list", include_in_schema=False)
+    @get(path="", include_in_schema=False)
     async def shop_list_page(
         self,
         r_shop_repo: ShopRepository,
