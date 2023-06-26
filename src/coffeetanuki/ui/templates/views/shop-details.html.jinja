@@ -89,8 +89,10 @@
       <div class="has-text-centered">
         <h2 class="subtitle">tags</h2>
         <div>
+          {% set scope_color = {"offering": "is-warning", "amenity": "is-info"} %}
           {% for tag in shop.tags %}
-          <span class="tag">{{ tag.scope + "::" + tag.name }}</span>
+          <span class="tag is-light {{scope_color[tag.scope] if tag.scope in scope_color else ''}}">{{ tag.name
+            }}</span>
           {% endfor %}
         </div>
       </div>
