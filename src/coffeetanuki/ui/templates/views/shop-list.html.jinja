@@ -8,7 +8,8 @@
 
 {% block head_scripts %}
 <script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bulma.min.js"></script>
 {% endblock %}
@@ -22,27 +23,11 @@
         <thead>
           <tr>
             <th>name</th>
-            <th>address</th>
-            <th>roaster</th>
-            <th>hours</th>
-            <th class="no-sort">amenities</th>
+            <th>country</th>
+            <th>city</th>
+            <th>tags</th>
           </tr>
         </thead>
-        <tbody>
-          {% for shop in shops %}
-          <tr>
-            <td><a href="/shops/{{ shop.id }}">{{ shop.name }}</a></td>
-            <td>{{ shop.address }}</td>
-            <td>{{ shop.roaster }}</td>
-            <td>{{ shop.hours_of_operation }}</td>
-            <td>
-              {% for amenity in shop.amenities %}
-              <span class="tag">{{ amenity.name }}</span>
-              {% endfor %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
       </table>
     </div>
   </section>
@@ -53,15 +38,37 @@
 {% block body_scripts %}
 <script>
   $(document).ready(function () {
-    $('table').DataTable({
+    var shopData = JSON.parse('{{shops | tojson | safe}}');
+    var dataTable = $('table').DataTable({
       searching: true,     // Enable search functionality
       ordering: true,      // Enable sorting by header
       lengthChange: true,  // Enable max rows per page selector
       paging: true,        // Enable pagination
-      autoWidth: false,
-      columnDefs: [
-        {targets: 'no-sort', orderable: false},  // Disable sorting for columns with no-sort class
-        {"searchable": true, "targets": -1} // Enable filtering on the last column (tags)
+      data: shopData,
+      columns: [
+        {
+          data: 'name',
+          render: function (data, type, row) {
+            return '<a href="/shops/' + row.id + '">' + row.name + '</a>';
+          }
+        },
+        {data: 'country'},
+        {data: 'city'},
+        {
+          data: 'tags',
+          render: function (data) {
+            var tagsHtml = '';
+            var scopeColors = {
+              'offering': 'is-warning',
+              'amenity': 'is-info'
+            };
+            data.forEach(function (tag) {
+              var tagColor = scopeColors[tag.scope] || '';
+              tagsHtml += '<span class="tag is-light ' + tagColor + '">' + tag.name + '</span>';
+            });
+            return tagsHtml;
+          }
+        }
       ]
     });
   });
