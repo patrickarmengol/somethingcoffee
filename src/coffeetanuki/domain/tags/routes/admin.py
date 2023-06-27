@@ -39,7 +39,7 @@ class TagAdminController(Controller):
         return Template(template_name="admin/admin-tag-create.html.jinja")
 
     @get(
-        path="/{tag_uuid}/edit",
+        path="/{tag_uuid:uuid}/edit",
         include_in_schema=False,
     )
     async def admin_tag_edit(
