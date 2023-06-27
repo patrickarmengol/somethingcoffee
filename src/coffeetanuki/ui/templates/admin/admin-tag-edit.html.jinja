@@ -13,7 +13,7 @@
 <main class="site-content">
   <section class="section">
     <div class="container">
-      <h1 class="title">Edit Tag: tag.id</h1>
+      <h1 class="title">Edit Tag: {{tag.id}}</h1>
       <form id="editTagForm" methodo="PATCH">
         <div class="field">
           <label class="label" for="scope">Scope:</label>
@@ -43,7 +43,7 @@
 <script>
   var originalTag = JSON.parse('{{tag.json() | safe}}');
 
-  document.getElementById("editShopForm").addEventListener("submit", function (event) {
+  document.getElementById("editTagForm").addEventListener("submit", function (event) {
     event.preventDefault(); // prevent the default form submission
 
     var formData = {};
