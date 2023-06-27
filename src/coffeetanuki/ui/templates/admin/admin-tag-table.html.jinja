@@ -1,0 +1,103 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Tag Table - Admin{% endblock %}
+
+{% block header %}{% include "admin/admin-header.html.jinja" %}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bulma.min.css" />
+{% endblock %}
+
+{% block head_scripts %}
+<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bulma.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <h1 class="is-size-1 title">
+        Tags
+      </h1>
+      <table id="table" class="table is-striped is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>scope</th>
+            <th>name</th>
+            <th class="has-text-centered">actions</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}
+
+{% block body_scripts %}
+<script>
+  $(document).ready(function () {
+    var tagData = JSON.parse('{{tags | tojson | safe}}');
+    var dataTable = $('table').DataTable({
+      searching: true,     // Enable search functionality
+      ordering: true,      // Enable sorting by header
+      lengthChange: true,  // Enable max rows per page selector
+      paging: true,        // Enable pagination
+      data: tagData,
+      columns: [
+        {data: 'id'},
+        {data: 'scope'},
+        {data: 'name'},
+        {
+          data: null,
+          orderable: false,
+          render: function (data, type, row, meta) {
+            var actionButtonTemplate = `
+              <div class="buttons is-flex is-flex-wrap-nowrap is-centered">
+                <a href="/tags/${row.id}" class="button is-link is-small">
+                  <span class="icon iconify" data-icon="mdi-eye"></span>
+                </a>
+                <a href="/admin/tags/${row.id}/edit" class="button is-primary is-small">
+                  <span class="icon iconify" data-icon="mdi-pencil"></span>
+                </a>
+                <a href="#" data-item-id="${row.id}" class="button is-danger is-small delete-button">
+                  <span class="icon iconify" data-icon="mdi-delete"></span>
+                </a>
+              </div>
+            `;
+
+            return actionButtonTemplate;
+          }
+        },
+      ],
+    });
+    $('.delete-button').on('click', function (e) {
+      e.preventDefault();
+      var deleteButton = $(this);
+      var itemId = deleteButton.data('item-id');
+      var confirmation = confirm('Are you sure you want to delete this item?');
+
+      if (confirmation) {
+        // Send a DELETE request using AJAX
+        $.ajax({
+          url: '/api/tags/' + itemId,
+          type: 'DELETE',
+          success: function (result) {
+            // Handle the success case, e.g., remove the item row from the table
+            var row = deleteButton.closest('tr');
+            dataTable.row(row).remove().draw();
+          },
+          error: function (xhr, status, error) {
+            // Handle the error case
+            console.error(error);
+          }
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}
