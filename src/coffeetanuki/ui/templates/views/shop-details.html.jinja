@@ -112,11 +112,17 @@
 
 
 {% block body_scripts %}
-<script src="{{ url_for_static_asset('scripts', 'map.js') }}"></script>
 <script>
+  const copy =
+    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
+  const url = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+  const osm = L.tileLayer(url, {attribution: copy});
+  const map = L.map("map", {layers: [osm], minZoom: 4});
+
   L.marker([{{shop.coordinates.lat}}, {{shop.coordinates.lon}}])
     .bindPopup("{{shop.name}}")
     .addTo(map)
+
   map.setView([{{shop.coordinates.lat}}, {{shop.coordinates.lon}}], 13)
 </script>
 

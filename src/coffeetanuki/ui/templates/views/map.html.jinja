@@ -2,10 +2,12 @@
 
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="https:///unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.css">
 {% endblock %}
 
 {% block head_scripts %}
 <script src="https:///unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.js"></script>
 {% endblock %}
 
 {% block title %}Map{% endblock %}
@@ -24,11 +26,18 @@
 {% endblock %}
 
 {% block body_scripts %}
-<script src="{{ url_for_static_asset('scripts', 'map.js') }}"></script>
 <script>
+  const copy =
+    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
+  const url = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+  const osm = L.tileLayer(url, {attribution: copy});
+  const map = L.map("map", {layers: [osm], minZoom: 2});
+
   L.geoJSON({{shops_geojson | tojson | safe}})
     .bindPopup((layer) => '<a href="/shops/' + layer.feature.properties.id + '">' + layer.feature.properties.name + '</a>')
     .addTo(map);
-  map.setView([0, 0], 5)
+  L.control.locate().addTo(map);
+
+  map.setView([35.68174407122783, 139.76432229104455], 12)
 </script>
 {% endblock %}
