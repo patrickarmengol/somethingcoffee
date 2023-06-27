@@ -52,5 +52,6 @@ class ShopAdminController(Controller):
     ) -> Template:
         shop = parse_obj_as(ShopDBFull, await shop_repo.get(shop_id))
         return Template(
-            template_name="admin/admin-shop-edit.html.jinja", context={"shop": shop}
+            template_name="admin/admin-shop-edit.html.jinja",
+            context={"shop": shop},
         )

@@ -1,0 +1,92 @@
+{% extends "base/base.html.jinja" %}
+
+{% block title %}Edit Tag: {{ tag.id }} - Admin{% endblock %}
+
+{% block header %}{% include "admin/admin-header.html.jinja" %}{% endblock %}
+
+{% block head_scripts %}
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block content %}
+<main class="site-content">
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Edit Tag: tag.id</h1>
+      <form id="editTagForm" methodo="PATCH">
+        <div class="field">
+          <label class="label" for="scope">Scope:</label>
+          <div class="control">
+            <input class="input" type="text" id="scope" name="scope" value="{{ tag.name }}" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label" for="name">Name:</label>
+          <div class="control">
+            <input class="input" type="text" id="name" name="name" value="{{ tag.name }}" required>
+          </div>
+        </div>
+        <div class="field is-grouped">
+          <div class="control">
+            <input class="button is-primary" type="submit" value="Save">
+          </div>
+        </div>
+      </form>
+      <div id="message-wrapper"></div>
+    </div>
+  </section>
+</main>
+
+{% block body_scripts %}
+<script>
+  var originalTag = JSON.parse('{{tag.json() | safe}}');
+
+  document.getElementById("editShopForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // prevent the default form submission
+
+    var formData = {};
+    var scope = document.getElementById("scope").value;
+    var name = document.getElementById("name").value;
+
+    if (scope !== originalTag.scope) {
+      formData.scope = scope;
+    }
+
+    if (name !== originalTag.name) {
+      formData.name = name
+    }
+
+
+    // send the updated data to the backend if there are changes
+    if (Object.keys(formData).length > 0) {
+      $.ajax({
+        url: '/api/tags/{{tag.id}}',
+        type: 'PATCH',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+          // request completed successfully
+          showMessage("is-success", "Tag updated successfully.");
+          console.log(response);
+          originalTag = response;
+
+        },
+        error: function (xhr, status, error) {
+          // error occurred during the request
+          showMessage("is-danger", "An error occurred while updating the tag.");
+          console.error(error);
+        }
+      });
+    } else {
+      showMessage("is-light", "No changes made.");
+    }
+
+    // display messages in the message div
+    function showMessage(type, message) {
+      var messageDiv = document.getElementById("message-wrapper");
+      messageDiv.innerHTML = '<div class="message ' + type + '"><div class="message-body">' + message + '</div></div>';
+    }
+  });
+</script>
+{% endblock %}
