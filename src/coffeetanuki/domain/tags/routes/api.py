@@ -1,10 +1,8 @@
-from typing import Any
 from uuid import UUID
 
 from litestar import Controller, delete, get, patch, post
 from litestar.di import Provide
 from litestar.params import Parameter
-from litestar.contrib.repository.filters import CollectionFilter
 
 from pydantic import parse_obj_as
 
