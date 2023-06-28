@@ -1,12 +1,15 @@
 from typing import Any
 from uuid import UUID
+from geoalchemy2 import WKTElement
 
 from litestar import Controller, delete, get, patch, post
 from litestar.di import Provide
 from litestar.params import Parameter
 from litestar.contrib.repository.filters import CollectionFilter
+from sqlalchemy import select, func
 
 from pydantic import parse_obj_as
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from coffeetanuki.domain.shops.dependencies import (
     ShopRepository,
@@ -45,6 +48,35 @@ class ShopAPIController(Controller):
     )
     async def list_shops(self, r_shop_repo: ShopRepository) -> list[ShopDBFull]:
         return parse_obj_as(list[ShopDBFull], await r_shop_repo.list())
+
+    # list shops within distance of central point
+    @get(
+        path="/dwithin",
+        operation_id="ListShopsDwithin",
+        name="shops:listdwithin",
+        summary="List all shops within a radius distance from a central point.",
+        tags=["shops"],
+    )
+    async def list_shops_dwithin(
+        self,
+        db_session: AsyncSession,
+        lon: float = Parameter(
+            title="centroid-lon", description="Longitude coordinate of centroid."
+        ),
+        lat: float = Parameter(
+            title="centroid-lat", description="Latitude coordinate of centroid."
+        ),
+        radius: float = Parameter(
+            title="radius",
+            description="The radius distance in meters around the centroid to include.",
+        ),
+    ) -> list[ShopDBFull]:
+        point = WKTElement(f"Point({lon} {lat})")
+        query = select(Shop).where(func.ST_Dwithin(Shop.coordinates, point, radius))
+
+        return parse_obj_as(
+            list[ShopDBFull], list((await db_session.execute(query)).scalars())
+        )
 
     # list shops - geojson
     @get(
