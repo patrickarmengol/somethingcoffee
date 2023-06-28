@@ -1,6 +1,7 @@
 from typing import Any
 from uuid import UUID
 from geoalchemy2 import WKTElement
+from geoalchemy2.comparator import Comparator
 
 from litestar import Controller, delete, get, patch, post
 from litestar.di import Provide
@@ -61,10 +62,12 @@ class ShopAPIController(Controller):
         self,
         db_session: AsyncSession,
         lon: float = Parameter(
-            title="centroid-lon", description="Longitude coordinate of centroid."
+            title="centroid-lon",
+            description="Longitude coordinate of centroid.",
         ),
         lat: float = Parameter(
-            title="centroid-lat", description="Latitude coordinate of centroid."
+            title="centroid-lat",
+            description="Latitude coordinate of centroid.",
         ),
         radius: float = Parameter(
             title="radius",
@@ -73,6 +76,40 @@ class ShopAPIController(Controller):
     ) -> list[ShopDBFull]:
         point = WKTElement(f"Point({lon} {lat})")
         query = select(Shop).where(func.ST_Dwithin(Shop.coordinates, point, radius))
+
+        instances = list((await db_session.execute(query)).scalars())
+        for instance in instances:
+            db_session.expunge(instance)
+
+        return parse_obj_as(list[ShopDBFull], instances)
+
+    # list k-nearest-neighbors of central point
+    @get(
+        path="/knn",
+        operation_id="ListShopsKNN",
+        name="shops:listknn",
+        summary="List k-nearest-neighbor shops from a central point.",
+        tags=["shops"],
+    )
+    async def list_shops_knn(
+        self,
+        db_session: AsyncSession,
+        lon: float = Parameter(
+            title="centroid-lon",
+            description="Longitude coordinate of centroid.",
+        ),
+        lat: float = Parameter(
+            title="centroid-lat",
+            description="Latitude coordinate of centroid.",
+        ),
+        k: int = Parameter(
+            title="k", description="Number of nearest neighbors to include."
+        ),
+    ) -> list[ShopDBFull]:
+        point = WKTElement(f"Point({lon} {lat})")
+        query = (
+            select(Shop).order_by(Shop.coordinates.distance_centroid(point)).limit(k)
+        )
 
         instances = list((await db_session.execute(query)).scalars())
         for instance in instances:
