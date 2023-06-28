@@ -74,9 +74,11 @@ class ShopAPIController(Controller):
         point = WKTElement(f"Point({lon} {lat})")
         query = select(Shop).where(func.ST_Dwithin(Shop.coordinates, point, radius))
 
-        return parse_obj_as(
-            list[ShopDBFull], list((await db_session.execute(query)).scalars())
-        )
+        instances = list((await db_session.execute(query)).scalars())
+        for instance in instances:
+            db_session.expunge(instance)
+
+        return parse_obj_as(list[ShopDBFull], instances)
 
     # list shops - geojson
     @get(
