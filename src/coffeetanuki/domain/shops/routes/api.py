@@ -1,7 +1,6 @@
 from typing import Any
 from uuid import UUID
 from geoalchemy2 import WKTElement
-from geoalchemy2.comparator import Comparator
 
 from litestar import Controller, delete, get, patch, post
 from litestar.di import Provide
@@ -83,6 +82,39 @@ class ShopAPIController(Controller):
 
         return parse_obj_as(list[ShopDBFull], instances)
 
+    # list intersect with bbox
+    @get(
+        path="/bbox",
+        operation_id="ListShopsInBbox",
+        name="shops:listbbox",
+        summary="List shops that inside a bounding box.",
+        tags=["shops"],
+    )
+    async def list_shops_bbox(
+        self,
+        db_session: AsyncSession,
+        in_bbox: str = Parameter(
+            title="bbox",
+            description="Number of nearest neighbors to include.",
+        ),
+    ) -> list[ShopDBFull]:
+        try:
+            p1x, p1y, p2x, p2y = (int(n) for n in in_bbox.split(","))
+        except ValueError:
+            raise ValueError(f"Invalid bbox string supplied for parameter {in_bbox}")
+
+        bbox = WKTElement(
+            f"POLYGON(({p1x} {p1y},{p1x} {p2y},{p2x} {p2y},{p2x} {p1y},{p1x} {p1y}))",
+            srid=4326,
+        )
+        query = select(Shop).where(Shop.coordinates.intersects(bbox))
+
+        instances = list((await db_session.execute(query)).scalars())
+        for instance in instances:
+            db_session.expunge(instance)
+
+        return parse_obj_as(list[ShopDBFull], instances)
+
     # list k-nearest-neighbors of central point
     @get(
         path="/knn",
@@ -106,7 +138,7 @@ class ShopAPIController(Controller):
             title="k", description="Number of nearest neighbors to include."
         ),
     ) -> list[ShopDBFull]:
-        point = WKTElement(f"Point({lon} {lat})")
+        point = WKTElement(f"Point({lon} {lat})", srid=4326)
         query = (
             select(Shop).order_by(Shop.coordinates.distance_centroid(point)).limit(k)
         )
