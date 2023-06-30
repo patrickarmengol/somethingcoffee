@@ -61,14 +61,17 @@ class ShopAPIController(Controller):
         self,
         db_session: AsyncSession,
         lon: float = Parameter(
+            float,
             title="centroid-lon",
             description="Longitude coordinate of centroid.",
         ),
         lat: float = Parameter(
+            float,
             title="centroid-lat",
             description="Latitude coordinate of centroid.",
         ),
         radius: float = Parameter(
+            float,
             title="radius",
             description="The radius distance in meters around the centroid to include.",
         ),
@@ -95,11 +98,11 @@ class ShopAPIController(Controller):
         db_session: AsyncSession,
         in_bbox: str = Parameter(
             title="bbox",
-            description="Number of nearest neighbors to include.",
+            description="Extents of bounding box. (format: minx,miny,maxx,maxy)",
         ),
     ) -> list[ShopDBFull]:
         try:
-            p1x, p1y, p2x, p2y = (int(n) for n in in_bbox.split(","))
+            p1x, p1y, p2x, p2y = (float(n) for n in in_bbox.split(","))
         except ValueError:
             raise ValueError(f"Invalid bbox string supplied for parameter {in_bbox}")
 
