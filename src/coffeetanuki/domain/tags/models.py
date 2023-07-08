@@ -19,5 +19,5 @@ class Tag(UUIDBase):
     shops: Mapped[list[Shop]] = relationship(
         secondary=shop_tag,
         back_populates="tags",
-        lazy="noload",
+        lazy="raise",
     )
