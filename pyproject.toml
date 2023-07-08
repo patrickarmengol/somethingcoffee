@@ -7,7 +7,7 @@ name = "coffeetanuki"
 version = "0.1.0"
 description = "discover nearby specialty coffee"
 dependencies = [
-  "litestar",
+  "litestar @ git+https://github.com/litestar-org/litestar@main",
   "sqlalchemy",
   "geoalchemy2",
   "uvicorn",
@@ -17,3 +17,6 @@ dependencies = [
   "shapely",
   "asyncpg",
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
