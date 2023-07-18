@@ -50,7 +50,6 @@
     var dataTable = $('#shop-table').DataTable({
       data: shopData,
       searchPanes: {
-        columns: [1, 2, 3],
         cascadePanes: true
       },
       dom: 'Plfrtip',
@@ -62,21 +61,28 @@
           }
         },
         {
-          data: "country"
+          data: "country",
+          searchPanes: {
+            show: true
+          }
         },
         {
-          data: "city"
+          data: "city",
+          searchPanes: {
+            show: true
+          }
         },
         {
           data: "tags",
           render: {
             _: '[, ]',
             sp: '[].name',
-            "display": function (data) {
+            display: function (data) {
               return data.map(tag => '<span class="tag is-light ' + (scopeColor[tag.scope] || '') + '">' + tag.name + '</span>').join(' ');
             }
           },
           searchPanes: {
+            show: true,
             orthogonal: 'sp'
           },
           sortable: false
