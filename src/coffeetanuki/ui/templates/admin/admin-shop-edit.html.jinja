@@ -99,11 +99,11 @@
         <div class="field">
           <label class="label" for="tags">Tags:</label>
           <div class="control">
-            {% for tag in ["offering::espresso", "offering::cappuccino", "amenity::wifi"] %}
+            {% for tag in tags %}
             <label class="checkbox p-2">
-              <input type="checkbox" name="tags" value="{{ tag.split('::')[1] }}" {% if tag.split('::')[1] in
-                shop.tags|map(attribute='name' )|list %}checked{% endif %}>
-              {{ tag }}
+              <input type="checkbox" name="tags" value="{{ tag.name }}" {% if tag.name in shop.tags|map(attribute='name'
+                )|list %}checked{% endif %}>
+              {{ '::'.join((tag.scope, tag.name)) }}
             </label>
             {% endfor %}
           </div>
