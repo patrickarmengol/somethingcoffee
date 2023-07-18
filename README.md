@@ -28,7 +28,7 @@ Set up a `.env` file with the following environment variables:
 Then run the docker-compose to build the images and run the containers, passing in the env file.
 
 ```
-docker-compose --env-file .env up -d --build
+docker-compose up -d --build
 ```
 
 The asgi server should wait for the database to start before running. 

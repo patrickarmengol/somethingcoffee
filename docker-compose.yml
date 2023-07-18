@@ -10,13 +10,16 @@ services:
       - 5000:5000
     depends_on:
       - db
+    env_file:
+      - .env
   db:
     image: kartoza/postgis:latest
     volumes:
       - postgis_data:/var/lib/postgresql/data
     expose:
       - 5432
-    restart: on-failure
+    env_file:
+      - .env
 
 volumes:
   postgis_data:
