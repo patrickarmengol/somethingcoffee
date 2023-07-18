@@ -6,7 +6,7 @@ from litestar.response import Template
 from pydantic import parse_obj_as
 
 from coffeetanuki.domain.shops.dependencies import ShopRepository, provide_shop_repo
-from coffeetanuki.domain.shops.schemas import ShopDB, ShopDBFull
+from coffeetanuki.domain.shops.schemas import ShopDBFull
 
 
 class ShopAdminController(Controller):
@@ -23,7 +23,7 @@ class ShopAdminController(Controller):
         self,
         shop_repo: ShopRepository,
     ) -> Template:
-        shops = parse_obj_as(list[ShopDB], await shop_repo.list())
+        shops = parse_obj_as(list[ShopDBFull], await shop_repo.list())
         return Template(
             template_name="admin/admin-shop-table.html.jinja",
             context={"shops": shops},

@@ -4,7 +4,7 @@ from coffeetanuki.domain.shops import schemas
 
 
 # TODO: think about using geojson_pydantic; easier seralization
-def geojsonify(shops: list[schemas.ShopDB]):
+def geojsonify(shops: list[schemas.ShopDBFull]):
     geojson: dict[str, Any] = {"type": "FeatureCollection", "features": []}
     for shop in shops:
         feature: dict[str, Any] = {

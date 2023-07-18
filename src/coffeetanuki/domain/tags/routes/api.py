@@ -10,10 +10,9 @@ from pydantic import parse_obj_as
 from coffeetanuki.domain.tags.dependencies import (
     TagRepository,
     provide_tag_repo,
-    provide_r_tag_repo,
 )
 
-from coffeetanuki.domain.tags.schemas import TagCreate, TagUpdate, TagDB, TagDBFull
+from coffeetanuki.domain.tags.schemas import TagCreate, TagUpdate, TagDBFull
 from coffeetanuki.domain.tags.models import Tag
 
 
@@ -23,7 +22,6 @@ class TagAPIController(Controller):
     path = "/api/tags"
     dependencies = {
         "tag_repo": Provide(provide_tag_repo),
-        "r_tag_repo": Provide(provide_r_tag_repo),
     }
 
     # list tags
@@ -36,9 +34,9 @@ class TagAPIController(Controller):
     )
     async def list_tags(
         self,
-        r_tag_repo: TagRepository,
+        tag_repo: TagRepository,
     ) -> list[TagDBFull]:
-        return parse_obj_as(list[TagDBFull], await r_tag_repo.list())
+        return parse_obj_as(list[TagDBFull], await tag_repo.list())
 
     # get tag by id
     @get(
@@ -50,13 +48,13 @@ class TagAPIController(Controller):
     )
     async def get_tag(
         self,
-        r_tag_repo: TagRepository,
+        tag_repo: TagRepository,
         tag_id: UUID = Parameter(
             title="Tag ID",
             description="Tag to retrieve",
         ),
     ) -> TagDBFull:
-        return parse_obj_as(TagDBFull, await r_tag_repo.get(tag_id))
+        return parse_obj_as(TagDBFull, await tag_repo.get(tag_id))
 
     # create tag
     @post(
@@ -70,10 +68,10 @@ class TagAPIController(Controller):
         self,
         tag_repo: TagRepository,
         data: TagCreate,
-    ) -> TagDB:
+    ) -> TagDBFull:
         obj = await tag_repo.add(Tag(**data.dict()))
         await tag_repo.session.commit()
-        return parse_obj_as(TagDB, obj)
+        return parse_obj_as(TagDBFull, obj)
 
     # update tag
     @patch(
@@ -91,12 +89,12 @@ class TagAPIController(Controller):
             title="Tag ID",
             description="The tag to update",
         ),
-    ) -> TagDB:
+    ) -> TagDBFull:
         dd = data.dict(exclude_unset=True)
         dd.update({"id": tag_id})
         obj = await tag_repo.update(Tag(**dd))
         await tag_repo.session.commit()
-        return parse_obj_as(TagDB, obj)
+        return parse_obj_as(TagDBFull, obj)
 
     # delete tag
     @delete(
@@ -108,11 +106,11 @@ class TagAPIController(Controller):
     )
     async def delete_tag(
         self,
-        r_tag_repo: TagRepository,
+        tag_repo: TagRepository,
         tag_id: UUID = Parameter(
             title="Tag ID",
             description="The tag to delete",
         ),
     ) -> None:
-        _ = await r_tag_repo.delete(tag_id)
-        await r_tag_repo.session.commit()
+        _ = await tag_repo.delete(tag_id)
+        await tag_repo.session.commit()

@@ -8,7 +8,6 @@ from typing import Any
 __all__ = [
     "ShopRepository",
     "provide_shop_repo",
-    "provide_r_shop_repo",
 ]
 
 
@@ -21,12 +20,5 @@ class ShopRepository(SQLAlchemyAsyncRepository[Shop]):
 async def provide_shop_repo(db_session: AsyncSession) -> ShopRepository:
     return ShopRepository(
         statement=select(Shop),
-        session=db_session,
-    )
-
-
-async def provide_r_shop_repo(db_session: AsyncSession) -> ShopRepository:
-    return ShopRepository(
-        statement=select(Shop).options(selectinload(Shop.tags)),
         session=db_session,
     )

@@ -6,7 +6,7 @@ from litestar.response import Template
 from pydantic import parse_obj_as
 
 from coffeetanuki.domain.tags.dependencies import TagRepository, provide_tag_repo
-from coffeetanuki.domain.tags.schemas import TagDB
+from coffeetanuki.domain.tags.schemas import TagDBFull
 
 
 class TagAdminController(Controller):
@@ -23,7 +23,7 @@ class TagAdminController(Controller):
         self,
         tag_repo: TagRepository,
     ) -> Template:
-        tags = parse_obj_as(list[TagDB], await tag_repo.list())
+        tags = parse_obj_as(list[TagDBFull], await tag_repo.list())
         return Template(
             template_name="admin/admin-tag-table.html.jinja",
             context={"tags": tags},
@@ -50,7 +50,7 @@ class TagAdminController(Controller):
             description="The tag to retrieve.",
         ),
     ) -> Template:
-        tag = parse_obj_as(TagDB, await tag_repo.get(tag_uuid))
+        tag = parse_obj_as(TagDBFull, await tag_repo.get(tag_uuid))
         return Template(
             template_name="admin/admin-tag-edit.html.jinja",
             context={"tag": tag},
