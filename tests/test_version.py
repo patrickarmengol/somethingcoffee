@@ -1,4 +1,4 @@
-from coffeetanuki import __version__
+from somethingcoffee import __version__
 
 
 def test_version():

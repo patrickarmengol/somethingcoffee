@@ -5,12 +5,12 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from litestar.contrib.sqlalchemy.base import UUIDBase
-from coffeetanuki.core import settings
+from somethingcoffee.core import settings
 from geoalchemy2 import alembic_helpers
 
 # import models here for alembic detection
-import coffeetanuki.domain.shops.models
-import coffeetanuki.domain.tags.models
+import somethingcoffee.domain.shops.models
+import somethingcoffee.domain.tags.models
 
 from alembic import context
 
